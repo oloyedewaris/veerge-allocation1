@@ -24,13 +24,13 @@ const siteLayers = [
 ];
 
 const villaLayers = [
-  { type: "A", path: "date/objects3d/21/256-ga0.glb" },
-  { type: "A", path: "date/objects3d/24/259-ga1.glb" },
-  { type: "B", path: "date/objects3d/27/261-gb1.glb" },
-  { type: "B", path: "date/objects3d/30/263-gb0.glb" },
-  { type: "C", path: "date/objects3d/33/265-gc0.glb" },
-  { type: "C", path: "date/objects3d/37/267-gc1.glb" }
-];
+  { type: "A", placement: "date/objects3d/21/json_27.json", model: "date/objects3d/22/151-g_Type_A_L_object.glb" },
+  { type: "A", placement: "date/objects3d/24/json_0.json", model: "date/objects3d/25/167-g_Type_A_R_object.glb" },
+  { type: "B", placement: "date/objects3d/27/json_25.json", model: "date/objects3d/28/236-g_Type_B_L_object.glb" },
+  { type: "B", placement: "date/objects3d/30/json_80.json", model: "date/objects3d/31/240-g_Type_B_R_object.glb" },
+  { type: "C", placement: "date/objects3d/33/json_53.json", model: "date/objects3d/34/212-g_Type_C_L_object.glb" },
+  { type: "C", placement: "date/objects3d/37/json_66.json", model: "date/objects3d/38/221-g_Type_C_R_object.glb" }
+] as const;
 
 type TextureSpec = { path: string; repeat?: [number, number] };
 type TextureMap = Record<string, TextureSpec>;
@@ -68,6 +68,54 @@ const villaTextures: Record<string, TextureMap> = {
   B: { "*": { path: "date/textures/21/99-icon.png" } },
   C: { "*": { path: "date/textures/1/4-icon.png" } }
 };
+
+type PlacementNode = [string, number, number, number, number, number, number, number, number, number, unknown[]];
+
+function VillaInstances({ placement, model, type, visible }: { placement: string; model: string; type: string; visible: boolean }) {
+  const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(model)}`);
+  const rawPlacement = useLoader(THREE.FileLoader, `${ASSET_ROOT}${encodeURI(placement)}`);
+  const textureSpec = villaTextures[type]["*"];
+  const texture = useLoader(THREE.TextureLoader, `${ASSET_ROOT}${encodeURI(textureSpec.path)}`);
+
+  const instances = useMemo(() => {
+    const raw = typeof rawPlacement === "string" ? rawPlacement : new TextDecoder().decode(rawPlacement as ArrayBuffer);
+    const nodes = (JSON.parse(raw).three?.[10] ?? []) as PlacementNode[];
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, -1);
+    texture.needsUpdate = true;
+
+    const material = new THREE.MeshPhongMaterial({
+      map: texture,
+      color: "#ffffff",
+      specular: new THREE.Color(type === "B" ? "#050505" : "#111111"),
+      shininess: type === "B" ? 60 : 28,
+      side: THREE.DoubleSide
+    });
+
+    return nodes.map((node) => {
+      const object = gltf.scene.clone(true);
+      object.name = node[0];
+      object.position.set(node[1] * 0.01, node[2] * 0.01, node[3] * 0.01);
+      object.rotation.set(
+        THREE.MathUtils.degToRad(node[4]),
+        THREE.MathUtils.degToRad(node[5]),
+        THREE.MathUtils.degToRad(node[6])
+      );
+      object.scale.set(node[7], node[8], node[9]);
+      object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = material;
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      return object;
+    });
+  }, [gltf.scene, rawPlacement, texture, type]);
+
+  return <group visible={visible}>{instances.map((object) => <primitive key={object.name} object={object} />)}</group>;
+}
 
 function ModelScene({ path, visible, textures, loadedTextures }: { path: string; visible: boolean; textures: TextureMap; loadedTextures: THREE.Texture[] }) {
   const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(path)}`);
@@ -162,7 +210,7 @@ function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; contr
     />
     <group scale={0.82}>
       {siteLayers.map((path) => <Suspense key={path} fallback={null}><Model path={path} textures={siteTextures[path]} /></Suspense>)}
-      {villaLayers.map(({ type, path }) => <Suspense key={path} fallback={null}><Model path={path} textures={villaTextures[type]} visible={activeTypes.has(type)} /></Suspense>)}
+      {villaLayers.map(({ type, placement, model }) => <Suspense key={placement} fallback={null}><VillaInstances placement={placement} model={model} type={type} visible={activeTypes.has(type)} /></Suspense>)}
     </group>
     <Suspense fallback={null}><Environment files={`${ASSET_ROOT}date/scenes3d/2/38-sfer.jpg`} background={false} environmentIntensity={0.28} /></Suspense>
     <CameraRig controls={controls} />
@@ -235,4 +283,4 @@ export default function TourApp() {
   </main>;
 }
 
-[...siteLayers, ...villaLayers.map((item) => item.path)].forEach((path) => useGLTF.preload(`${ASSET_ROOT}${encodeURI(path)}`));
+[...siteLayers, ...villaLayers.map((item) => item.model)].forEach((path) => useGLTF.preload(`${ASSET_ROOT}${encodeURI(path)}`));
