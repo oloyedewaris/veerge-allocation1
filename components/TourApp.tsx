@@ -81,15 +81,19 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
     const raw = typeof rawPlacement === "string" ? rawPlacement : new TextDecoder().decode(rawPlacement as ArrayBuffer);
     const nodes = (JSON.parse(raw).three?.[10] ?? []) as PlacementNode[];
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.flipY = false;
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(1, -1);
+    texture.repeat.set(1, 1);
     texture.needsUpdate = true;
 
     const material = new THREE.MeshPhongMaterial({
       map: texture,
       color: "#ffffff",
-      specular: new THREE.Color(type === "B" ? "#050505" : "#111111"),
-      shininess: type === "B" ? 60 : 28,
+      emissive: new THREE.Color("#4a4035"),
+      emissiveMap: texture,
+      emissiveIntensity: 0.3,
+      specular: new THREE.Color("#080808"),
+      shininess: 10,
       side: THREE.DoubleSide
     });
 
@@ -128,6 +132,10 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
     const textureByMesh = new Map(entries.map(([name, spec], index) => {
       const texture = loadedTextures[index];
       texture.colorSpace = THREE.SRGBColorSpace;
+      // GLTF UVs use a bottom-left texture origin. TextureLoader defaults to
+      // the opposite convention, which was putting the atlas' black padding
+      // over roofs and facades.
+      texture.flipY = false;
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       if (spec.repeat) texture.repeat.set(...spec.repeat);
       texture.needsUpdate = true;
@@ -143,14 +151,21 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
           object.material = new THREE.MeshPhongMaterial({
             map,
             color: "#ffffff",
-            specular: new THREE.Color("#181818"),
-            shininess: 18,
+            emissive: new THREE.Color("#3d3a32"),
+            emissiveMap: map,
+            emissiveIntensity: 0.22,
+            specular: new THREE.Color("#080808"),
+            shininess: 8,
             side: previous?.side ?? THREE.FrontSide
           });
         } else if (/tree|palm/i.test(object.name)) {
           const material = Array.isArray(object.material) ? object.material[0] : object.material;
           object.material = material.clone();
-          object.material.color.set("#486b25");
+          object.material.color.set("#718c42");
+          if ("emissive" in object.material) {
+            object.material.emissive.set("#18230d");
+            object.material.emissiveIntensity = 0.22;
+          }
         }
       }
     });
@@ -198,12 +213,12 @@ function CameraRig({ controls }: { controls: React.RefObject<OrbitControlsImpl |
 function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; controls: React.RefObject<OrbitControlsImpl | null> }) {
   return <>
     <color attach="background" args={["#cbb486"]} />
-    <ambientLight intensity={0.62} />
-    <hemisphereLight intensity={0.48} color="#fff4d6" groundColor="#5d6745" />
+    <ambientLight intensity={1.1} color="#fffaf0" />
+    <hemisphereLight intensity={1.05} color="#fff9eb" groundColor="#b7aa86" />
     <directionalLight
       castShadow
-      intensity={1.65}
-      color="#fff3d6"
+      intensity={0.9}
+      color="#fff8e8"
       position={[700, 1200, 500]}
       shadow-mapSize={[2048, 2048]}
       shadow-bias={-0.00015}
@@ -212,7 +227,7 @@ function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; contr
       {siteLayers.map((path) => <Suspense key={path} fallback={null}><Model path={path} textures={siteTextures[path]} /></Suspense>)}
       {villaLayers.map(({ type, placement, model }) => <Suspense key={placement} fallback={null}><VillaInstances placement={placement} model={model} type={type} visible={activeTypes.has(type)} /></Suspense>)}
     </group>
-    <Suspense fallback={null}><Environment files={`${ASSET_ROOT}date/scenes3d/2/38-sfer.jpg`} background={false} environmentIntensity={0.28} /></Suspense>
+    <Suspense fallback={null}><Environment files={`${ASSET_ROOT}date/scenes3d/2/38-sfer.jpg`} background={false} environmentIntensity={0.42} /></Suspense>
     <CameraRig controls={controls} />
   </>;
 }
@@ -249,8 +264,8 @@ export default function TourApp() {
           antialias: true,
           powerPreference: "high-performance",
           outputColorSpace: THREE.SRGBColorSpace,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 0.92
+          toneMapping: THREE.NoToneMapping,
+          toneMappingExposure: 1
         }}
       >
         <Masterplan activeTypes={activeTypes} controls={controls} />
