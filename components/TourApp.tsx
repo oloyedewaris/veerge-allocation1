@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useLoader, useThree } from "@react-three/fiber";
-import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import { ChevronDown, Menu as MenuIcon, Minus, Plus } from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -32,7 +32,14 @@ const villaLayers = [
   { type: "C", placement: "date/objects3d/37/json_66.json", model: "date/objects3d/38/221-g_Type_C_R_object.glb" }
 ] as const;
 
-type TextureSpec = { path: string; repeat?: [number, number] };
+type TextureSpec = {
+  path: string;
+  repeat?: [number, number];
+  color?: string;
+  emissive?: string;
+  shininess?: number;
+  specular?: string;
+};
 type TextureMap = Record<string, TextureSpec>;
 
 // The original tour stores materials outside its geometry-only GLBs. These
@@ -52,14 +59,14 @@ const siteTextures: Record<string, TextureMap> = {
     border_drainage: { path: "date/textures/58/452-border_drainage.jpg", repeat: [0.3, 0.3] }
   },
   "date/objects3d/36/206-g_Building 2 Scaled.glb": {
-    g_Hospital_Web_object: { path: "date/textures/15/79-GenPlan_Hospital_Web_Color.jpg" },
-    g_Mall_Web_object: { path: "date/textures/16/85-icon.png" },
-    g_GenPlan_Building_2_2_Web_object: { path: "date/textures/18/91-GenPlan_Building_2_2_Web_Color.jpg" },
-    g_GenPlan_Building_2_1_Web_object: { path: "date/textures/17/92-GenPlan_Building_2_1_Web_Color.jpg" },
+    g_Hospital_Web_object: { path: "date/textures/15/83-icon.png", emissive: "#242424" },
+    g_Mall_Web_object: { path: "date/textures/16/85-icon.png", emissive: "#242424" },
+    g_GenPlan_Building_2_2_Web_object: { path: "date/textures/18/89-icon.png", specular: "#242424" },
+    g_GenPlan_Building_2_1_Web_object: { path: "date/textures/17/87-icon.png", emissive: "#242424" },
     Mosque_Web002: { path: "date/textures/23/121-Mosque_Web_Color.jpg" }
   },
   "date/objects3d/5/mod/g_Building_.glb": {
-    "*": { path: "date/textures/4/11-icon.png" }
+    "*": { path: "date/textures/4/11-icon.png", emissive: "#161616" }
   }
 };
 
@@ -67,6 +74,14 @@ const villaTextures: Record<string, TextureMap> = {
   A: { "*": { path: "date/textures/20/471-Type_A_Web_Color.jpg" } },
   B: { "*": { path: "date/textures/21/99-icon.png" } },
   C: { "*": { path: "date/textures/1/4-icon.png" } }
+};
+
+const foliageColors: Record<string, string> = {
+  "date/objects3d/10/86-g_three_1.glb": "#536f32",
+  "date/objects3d/11/87-g_three_2.glb": "#435f2b",
+  "date/objects3d/12/mod/g_three_3.glb": "#4d6b30",
+  "date/objects3d/13/mod/g_three_1.glb": "#395a27",
+  "date/objects3d/19/90-g_three_palms.glb": "#536a31"
 };
 
 type PlacementNode = [string, number, number, number, number, number, number, number, number, number, unknown[]];
@@ -86,15 +101,22 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
     texture.repeat.set(1, 1);
     texture.needsUpdate = true;
 
-    const material = new THREE.MeshPhongMaterial({
+    const buildingMaterial = new THREE.MeshPhongMaterial({
       map: texture,
       color: "#ffffff",
-      emissive: new THREE.Color("#4a4035"),
-      emissiveMap: texture,
-      emissiveIntensity: 0.3,
-      specular: new THREE.Color("#080808"),
-      shininess: 10,
+      emissive: new THREE.Color("#242424"),
+      specular: new THREE.Color(type === "B" ? "#050505" : "#111111"),
+      shininess: type === "B" ? 77.51 : 30,
       side: THREE.DoubleSide
+    });
+    const glassMaterial = new THREE.MeshPhongMaterial({
+      color: "#636363",
+      specular: new THREE.Color("#080808"),
+      shininess: 30,
+      opacity: 0.73,
+      transparent: true,
+      depthWrite: true,
+      side: THREE.FrontSide
     });
 
     return nodes.map((node) => {
@@ -107,11 +129,14 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
         THREE.MathUtils.degToRad(node[6])
       );
       object.scale.set(node[7], node[8], node[9]);
+      let meshIndex = 0;
       object.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          child.material = material;
-          child.castShadow = true;
+          const isGlass = type === "C" ? meshIndex === 1 : meshIndex === 0;
+          child.material = isGlass ? glassMaterial : buildingMaterial;
+          child.castShadow = !isGlass;
           child.receiveShadow = true;
+          meshIndex += 1;
         }
       });
       return object;
@@ -139,32 +164,31 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       if (spec.repeat) texture.repeat.set(...spec.repeat);
       texture.needsUpdate = true;
-      return [name, texture] as const;
+      return [name, { texture, spec }] as const;
     }));
     clone.traverse((object) => {
       if (object instanceof THREE.Mesh) {
         object.castShadow = true;
         object.receiveShadow = true;
-        const map = textureByMesh.get(object.name) ?? textureByMesh.get("*");
-        if (map) {
+        const mapped = textureByMesh.get(object.name) ?? textureByMesh.get("*");
+        if (mapped) {
+          const { texture: map, spec } = mapped;
           const previous = Array.isArray(object.material) ? object.material[0] : object.material;
           object.material = new THREE.MeshPhongMaterial({
             map,
-            color: "#ffffff",
-            emissive: new THREE.Color("#3d3a32"),
-            emissiveMap: map,
-            emissiveIntensity: 0.22,
-            specular: new THREE.Color("#080808"),
-            shininess: 8,
+            color: spec.color ?? "#ffffff",
+            emissive: new THREE.Color(spec.emissive ?? "#000000"),
+            specular: new THREE.Color(spec.specular ?? "#111111"),
+            shininess: spec.shininess ?? 30,
             side: previous?.side ?? THREE.FrontSide
           });
         } else if (/tree|palm/i.test(object.name)) {
           const material = Array.isArray(object.material) ? object.material[0] : object.material;
           object.material = material.clone();
-          object.material.color.set("#718c42");
+          object.material.color.set(foliageColors[path] ?? "#46642d");
           if ("emissive" in object.material) {
-            object.material.emissive.set("#18230d");
-            object.material.emissiveIntensity = 0.22;
+            object.material.emissive.set("#000000");
+            object.material.emissiveIntensity = 1;
           }
         }
       }
@@ -192,7 +216,7 @@ function Model({ path, visible = true, textures }: { path: string; visible?: boo
 function CameraRig({ controls }: { controls: React.RefObject<OrbitControlsImpl | null> }) {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(180, 320, 430);
+    camera.position.set(-270, 195, 0);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return <OrbitControls
@@ -213,21 +237,21 @@ function CameraRig({ controls }: { controls: React.RefObject<OrbitControlsImpl |
 function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; controls: React.RefObject<OrbitControlsImpl | null> }) {
   return <>
     <color attach="background" args={["#cbb486"]} />
-    <ambientLight intensity={1.1} color="#fffaf0" />
-    <hemisphereLight intensity={1.05} color="#fff9eb" groundColor="#b7aa86" />
+    <fog attach="fog" args={["#ffffff", 820, 2800]} />
+    <ambientLight intensity={1.15} color="#ffffff" />
     <directionalLight
       castShadow
-      intensity={0.9}
-      color="#fff8e8"
-      position={[700, 1200, 500]}
-      shadow-mapSize={[2048, 2048]}
-      shadow-bias={-0.00015}
+      intensity={0.65}
+      color="#ffffff"
+      position={[450, 900, -700]}
+      shadow-mapSize={[4096, 4096]}
+      shadow-bias={0.001}
+      shadow-radius={1}
     />
     <group scale={0.82}>
       {siteLayers.map((path) => <Suspense key={path} fallback={null}><Model path={path} textures={siteTextures[path]} /></Suspense>)}
       {villaLayers.map(({ type, placement, model }) => <Suspense key={placement} fallback={null}><VillaInstances placement={placement} model={model} type={type} visible={activeTypes.has(type)} /></Suspense>)}
     </group>
-    <Suspense fallback={null}><Environment files={`${ASSET_ROOT}date/scenes3d/2/38-sfer.jpg`} background={false} environmentIntensity={0.42} /></Suspense>
     <CameraRig controls={controls} />
   </>;
 }
@@ -259,7 +283,7 @@ export default function TourApp() {
         frameloop="demand"
         dpr={[1, 1.5]}
         performance={{ min: 0.6 }}
-        camera={{ fov: 34, near: 1, far: 10000 }}
+        camera={{ fov: 45, near: 1, far: 10000 }}
         gl={{
           antialias: true,
           powerPreference: "high-performance",
