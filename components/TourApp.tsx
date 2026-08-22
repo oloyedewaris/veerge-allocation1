@@ -1,11 +1,13 @@
 "use client";
 
 import { Canvas, useLoader, useThree } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { ChevronDown, Menu as MenuIcon, Minus, Plus } from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
+import UnitDetails from "./UnitDetails";
 
 const ASSET_ROOT = "/reference-assets/";
 
@@ -91,6 +93,7 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
   const rawPlacement = useLoader(THREE.FileLoader, `${ASSET_ROOT}${encodeURI(placement)}`);
   const textureSpec = villaTextures[type]["*"];
   const texture = useLoader(THREE.TextureLoader, `${ASSET_ROOT}${encodeURI(textureSpec.path)}`);
+  const [hoveredVilla, setHoveredVilla] = useState<string | null>(null);
 
   const instances = useMemo(() => {
     const raw = typeof rawPlacement === "string" ? rawPlacement : new TextDecoder().decode(rawPlacement as ArrayBuffer);
@@ -133,7 +136,12 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
       object.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           const isGlass = type === "C" ? meshIndex === 1 : meshIndex === 0;
-          child.material = isGlass ? glassMaterial : buildingMaterial;
+          // Materials must be unique per villa so the hover treatment affects
+          // only the unit beneath the pointer.
+          child.material = (isGlass ? glassMaterial : buildingMaterial).clone();
+          const material = child.material as THREE.MeshPhongMaterial;
+          material.userData.baseEmissive = material.emissive.getHex();
+          material.userData.baseEmissiveIntensity = material.emissiveIntensity;
           child.castShadow = !isGlass;
           child.receiveShadow = true;
           meshIndex += 1;
@@ -143,7 +151,37 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
     });
   }, [gltf.scene, rawPlacement, texture, type]);
 
-  return <group visible={visible}>{instances.map((object) => <primitive key={object.name} object={object} />)}</group>;
+  useEffect(() => {
+    instances.forEach((villa) => villa.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach((rawMaterial) => {
+        const material = rawMaterial as THREE.MeshPhongMaterial;
+        if (!material.emissive) return;
+        const active = villa.name === hoveredVilla;
+        material.emissive.setHex(active ? 0x10b39b : (material.userData.baseEmissive ?? 0x000000));
+        material.emissiveIntensity = active ? 0.62 : (material.userData.baseEmissiveIntensity ?? 1);
+        material.needsUpdate = true;
+      });
+    }));
+  }, [hoveredVilla, instances]);
+
+  const openUnit = (event: ThreeEvent<MouseEvent>, objectName: string) => {
+    event.stopPropagation();
+    // OrbitControls also receives pointer gestures. Only treat a short,
+    // stationary gesture as a villa selection, not a drag across the map.
+    if (event.delta > 5) return;
+    const unitId = objectName.match(/_(\d+)$/)?.[1];
+    if (unitId) window.location.assign(`/?villa=${unitId}`);
+  };
+
+  return <group visible={visible}>{instances.map((object) => <primitive
+    key={object.name}
+    object={object}
+    onClick={(event: ThreeEvent<MouseEvent>) => openUnit(event, object.name)}
+    onPointerOver={(event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); setHoveredVilla(object.name); document.body.style.cursor = "pointer"; }}
+    onPointerOut={(event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); setHoveredVilla((current) => current === object.name ? null : current); document.body.style.cursor = "default"; }}
+  />)}</group>;
 }
 
 function ModelScene({ path, visible, textures, loadedTextures }: { path: string; visible: boolean; textures: TextureMap; loadedTextures: THREE.Texture[] }) {
@@ -256,7 +294,7 @@ function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; contr
   </>;
 }
 
-export default function TourApp() {
+function MasterplanApp() {
   const [language, setLanguage] = useState<"en" | "ar">("en");
   const [activeTypes, setActiveTypes] = useState(() => new Set(["A", "B", "C"]));
   const [filterOpen, setFilterOpen] = useState(false);
@@ -322,4 +360,7 @@ export default function TourApp() {
   </main>;
 }
 
-[...siteLayers, ...villaLayers.map((item) => item.model)].forEach((path) => useGLTF.preload(`${ASSET_ROOT}${encodeURI(path)}`));
+export default function TourApp() {
+  const [villaId] = useState(() => typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("villa"));
+  return villaId ? <UnitDetails unitId={villaId} /> : <MasterplanApp />;
+}
