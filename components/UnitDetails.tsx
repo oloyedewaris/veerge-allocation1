@@ -48,19 +48,21 @@ function UnitScene({type,controls}:{type:ModelType;controls:React.RefObject<Orbi
 function parseUnits(csv:string):Unit[]{ return csv.split(/\r?\n/).slice(1).filter(Boolean).map((line)=>{const x=line.split(",");return {block:x[0],id:x[1],model:x[2],landArea:x[3],buildArea:x[4],bedrooms:x[5],bathrooms:x[6],master:x[7],living:x[8],kitchen:x[9],guest:x[10],direction:x[11],availability:x[12]};}); }
 
 export default function UnitDetails({unitId}:{unitId:string}){
-  const [unit,setUnit]=useState<Unit|null>(null), [detailsOpen,setDetailsOpen]=useState(false), [menuOpen,setMenuOpen]=useState(false), [language,setLanguage]=useState<"en"|"ar">("en");
+  const [unit,setUnit]=useState<Unit|null>(null), [detailsOpen,setDetailsOpen]=useState(false), [menuOpen,setMenuOpen]=useState(false), [language,setLanguage]=useState<"en"|"ar">("en"), [view,setView]=useState<"exterior"|"tour">("exterior");
   const controls=useRef<OrbitControlsImpl>(null);
   useEffect(()=>{fetch(`${ROOT}xzLocalDoc.csv`).then(r=>r.text()).then(parseUnits).then(units=>setUnit(units.find(item=>item.id===unitId)??null));},[unitId]);
   const type=((unit?.model?.trim()[0]||"B") as ModelType), variant=unit?.model.match(/\(([^)]+)\)/)?.[1]??unit?.model??"Villa";
+  const tourUrl=`https://3dtour.ua/files/tilal/narjis/3dtour/type${type.toLowerCase()}/`;
   const zoom=(factor:number)=>{const c=controls.current;if(!c)return;c.object.position.sub(c.target).multiplyScalar(factor).add(c.target);c.update();};
   return <main className="unit-app" dir={language==="ar"?"rtl":"ltr"}>
-    <div className="unit-canvas"><Canvas shadows dpr={[1,1.75]} camera={{fov:45,near:.1,far:200,position:[5.4,3.5,9]}} gl={{antialias:true,alpha:true,outputColorSpace:THREE.SRGBColorSpace,toneMapping:THREE.ACESFilmicToneMapping,toneMappingExposure:1.12}}><UnitScene type={type} controls={controls}/></Canvas></div>
+    {view==="exterior"?<div className="unit-canvas"><Canvas shadows dpr={[1,1.75]} camera={{fov:45,near:.1,far:200,position:[5.4,3.5,9]}} gl={{antialias:true,alpha:true,outputColorSpace:THREE.SRGBColorSpace,toneMapping:THREE.ACESFilmicToneMapping,toneMappingExposure:1.12}}><UnitScene type={type} controls={controls}/></Canvas></div>:
+      <div className="virtual-tour"><iframe src={tourUrl} title={`Virtual tour for villa ${unitId}`} allow="fullscreen; gyroscope; accelerometer" allowFullScreen/></div>}
     <nav className="unit-breadcrumb"><button onClick={()=>location.href="/?map3d"}>Map</button><span>›</span><button onClick={()=>location.href="/?map3d"}>Area</button><span>›</span><button className="current">Villa</button></nav>
     <section className="unit-tools"><button className="unit-summary" onClick={()=>setDetailsOpen(!detailsOpen)}><small>{unit?.direction??"—"}</small><strong>№ {unitId} <em>({variant})</em></strong><ChevronDown className={detailsOpen?"open":""}/></button>
       {detailsOpen&&unit&&<div className="unit-info"><div><span>Type</span><b>{type}</b></div><div><span>Status</span><b>{unit.availability}</b></div><div><span>Land area</span><b>{unit.landArea} m²</b></div><div><span>Built-up area</span><b>{unit.buildArea} m²</b></div><div><span>Bedrooms</span><b>{unit.bedrooms}</b></div><div><span>Bathrooms</span><b>{unit.bathrooms}</b></div></div>}
-      <div className="unit-actions"><button className="exterior"><Cuboid/>3D Exterior</button><button onClick={()=>window.open(`https://3dtour.ua/files/tilal/narjis/3dmap/new/?villa=${unitId}`,"_blank")}><Rotate3D/>Virtual Tour</button></div></section>
+      <div className="unit-actions"><button className={view==="exterior"?"active":""} onClick={()=>setView("exterior")}><Cuboid/>3D Exterior</button><button className={view==="tour"?"active":""} onClick={()=>setView("tour")}><Rotate3D/>Virtual Tour</button></div></section>
     <img className="map-logo" src={`${ROOT}date/info/96/117-Tilal_wht.svg`} alt="Tilal"/><div className="language-switch"><button className={language==="en"?"active":""} onClick={()=>setLanguage("en")}>EN</button><button className={language==="ar"?"active":""} onClick={()=>setLanguage("ar")}>AR</button></div>
     <div className="menu-wrap"><button className="main-menu" onClick={()=>setMenuOpen(!menuOpen)}><MenuIcon/><span>Menu</span></button>{menuOpen&&<nav className="menu-panel"><button onClick={()=>location.href="/?map3d"}>Masterplan</button><button>About Tilal</button><button>Location</button><button>Contact</button></nav>}</div>
-    <div className="zoom-tools"><button onClick={()=>zoom(.82)} aria-label="Zoom in"><Plus/></button><button onClick={()=>zoom(1.22)} aria-label="Zoom out"><Minus/></button></div><div className="compass"><i>N</i><span>W</span><b>▲</b><span>E</span><i>S</i></div>
+    {view==="exterior"&&<><div className="zoom-tools"><button onClick={()=>zoom(.82)} aria-label="Zoom in"><Plus/></button><button onClick={()=>zoom(1.22)} aria-label="Zoom out"><Minus/></button></div><div className="compass"><i>N</i><span>W</span><b>▲</b><span>E</span><i>S</i></div></>}
   </main>;
 }
