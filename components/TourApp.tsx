@@ -704,7 +704,11 @@ function MasterplanApp() {
       </section>
       */}
 
-      <img className="map-logo" src="/assets/logo.svg" alt="Marasi" />
+      <img
+        className="map-logo homepage-logo"
+        src="/assets/logo.svg"
+        alt="Marasi"
+      />
 
       <div className="allocation-ui" aria-label="Allocation controls">
         <aside className="allocation-left">
