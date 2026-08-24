@@ -100,7 +100,7 @@ const siteTextures: Record<string, TextureMap> = {
     grass: {
       path: "date/textures/60/456-grass.png",
       repeat: [0.1, 0.1],
-      color: "#d2df99",
+      color: "#ffffff",
     },
     border_drainage: {
       path: "date/textures/58/452-border_drainage.jpg",
@@ -138,11 +138,11 @@ const villaTextures: Record<string, TextureMap> = {
 };
 
 const foliageColors: Record<string, string> = {
-  "date/objects3d/10/86-g_three_1.glb": "#31551f",
-  "date/objects3d/11/87-g_three_2.glb": "#294a1b",
-  "date/objects3d/12/mod/g_three_3.glb": "#355a21",
-  "date/objects3d/13/mod/g_three_1.glb": "#254518",
-  "date/objects3d/19/90-g_three_palms.glb": "#3b5c25",
+  "date/objects3d/10/86-g_three_1.glb": "#52683d",
+  "date/objects3d/11/87-g_three_2.glb": "#485f35",
+  "date/objects3d/12/mod/g_three_3.glb": "#566d3e",
+  "date/objects3d/13/mod/g_three_1.glb": "#445b32",
+  "date/objects3d/19/90-g_three_palms.glb": "#53683c",
 };
 
 type PlacementNode = [
@@ -383,6 +383,11 @@ function ModelScene({
             side: previous?.side ?? THREE.FrontSide,
           });
         } else if (/tree|palm/i.test(object.name)) {
+          object.scale.set(
+            object.scale.x * 0.72,
+            object.scale.y * 0.88,
+            object.scale.z * 0.72,
+          );
           const material = Array.isArray(object.material)
             ? object.material[0]
             : object.material;
