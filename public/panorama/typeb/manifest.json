@@ -1,0 +1,752 @@
+{
+  "type": "B",
+  "initialScene": "s307",
+  "scenes": [
+    {
+      "id": "s307",
+      "title": "guest bedroom",
+      "floor": 0,
+      "hlookat": -75,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -73.64,
+          "atv": 7.4,
+          "target": "s308",
+          "lookAt": -74,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s308",
+      "title": "Panorama 8",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 102.91,
+          "atv": 8.19,
+          "target": "s307",
+          "lookAt": 106,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -18.78,
+          "atv": 5.66,
+          "target": "s301",
+          "lookAt": 71,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s301",
+      "title": "Panorama 1",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -89.83,
+          "atv": 8.54,
+          "target": "s302",
+          "lookAt": -182,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -31.92,
+          "atv": 10.86,
+          "target": "s303",
+          "lookAt": -147,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 7.71,
+          "atv": 3.2,
+          "target": "s101",
+          "lookAt": 110,
+          "rotate": 45
+        },
+        {
+          "id": "hs_4",
+          "ath": -127.38,
+          "atv": 7.4,
+          "target": "s308",
+          "lookAt": 137,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s302",
+      "title": "living room",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -0.4,
+          "atv": 10.42,
+          "target": "s301",
+          "lookAt": 90.44,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s303",
+      "title": "dining area",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 48.62,
+          "atv": 10.57,
+          "target": "s301",
+          "lookAt": 163,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -57.27,
+          "atv": 10.82,
+          "target": "s304",
+          "lookAt": 160,
+          "rotate": 90
+        },
+        {
+          "id": "hs_3",
+          "ath": -79.05,
+          "atv": 9.23,
+          "target": "s305",
+          "lookAt": 128,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -114.45,
+          "atv": 9.65,
+          "target": "s306",
+          "lookAt": -141.63,
+          "rotate": 0
+        },
+        {
+          "id": "hs_5",
+          "ath": -18.23,
+          "atv": -13.15,
+          "target": "s101",
+          "lookAt": 110,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s304",
+      "title": "Panorama 4",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -39.57,
+          "atv": 7.24,
+          "target": "s303",
+          "lookAt": 143,
+          "rotate": -45
+        }
+      ]
+    },
+    {
+      "id": "s305",
+      "title": "hallway",
+      "floor": 0,
+      "hlookat": 180,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -29.22,
+          "atv": 4.82,
+          "target": "s303",
+          "lookAt": 131,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 41.46,
+          "atv": 9.13,
+          "target": "s306",
+          "lookAt": 142,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s306",
+      "title": "bathroom 1",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -34,
+          "atv": 7.77,
+          "target": "s305",
+          "lookAt": -147.27,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 24.66,
+          "atv": 5.67,
+          "target": "s303",
+          "lookAt": 64,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s101",
+      "title": "Panorama 1",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -76.96,
+          "atv": 25.74,
+          "target": "s303",
+          "lookAt": -196,
+          "rotate": -135
+        },
+        {
+          "id": "hs_2",
+          "ath": 143.67,
+          "atv": 7.86,
+          "target": "s108",
+          "lookAt": -153,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 4.51,
+          "atv": 11.93,
+          "target": "s102",
+          "lookAt": 96.55,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 75.73,
+          "atv": 11.96,
+          "target": "s105",
+          "lookAt": 5,
+          "rotate": -45
+        },
+        {
+          "id": "hs_5",
+          "ath": 86.07,
+          "atv": 12.05,
+          "target": "s106",
+          "lookAt": -91.91,
+          "rotate": 0
+        },
+        {
+          "id": "hs_6",
+          "ath": -176.03,
+          "atv": 8.44,
+          "target": "s110",
+          "lookAt": 77.44,
+          "rotate": 0
+        },
+        {
+          "id": "hs_7",
+          "ath": -120.59,
+          "atv": -18.12,
+          "target": "s201",
+          "lookAt": -58,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s102",
+      "title": "living room",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -83.19,
+          "atv": 9.25,
+          "target": "s101",
+          "lookAt": 185,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -8.72,
+          "atv": 14.02,
+          "target": "s103",
+          "lookAt": -8,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 89.08,
+          "atv": 8.86,
+          "target": "s104",
+          "lookAt": 98.6,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s103",
+      "title": "dining area",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 174.07,
+          "atv": 13.2,
+          "target": "s102",
+          "lookAt": 135,
+          "rotate": -45
+        }
+      ]
+    },
+    {
+      "id": "s104",
+      "title": "Panorama 4",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -89.4,
+          "atv": 8.33,
+          "target": "s102",
+          "lookAt": -81.5,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s105",
+      "title": "hallway",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 169.91,
+          "atv": 15.86,
+          "target": "s101",
+          "lookAt": -100,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 59.05,
+          "atv": 12.85,
+          "target": "s106",
+          "lookAt": -78,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -29.76,
+          "atv": 6.32,
+          "target": "s107",
+          "lookAt": 0,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s106",
+      "title": "bathroom 1",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 82.43,
+          "atv": 15.15,
+          "target": "s101",
+          "lookAt": -85,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 111.49,
+          "atv": 14.42,
+          "target": "s105",
+          "lookAt": 277,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s107",
+      "title": "guest bedroom",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 168.66,
+          "atv": 12.43,
+          "target": "s105",
+          "lookAt": 153,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s108",
+      "title": "Panorama 8",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 5.19,
+          "atv": 9.55,
+          "target": "s101",
+          "lookAt": -53.3,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -52.08,
+          "atv": 10.09,
+          "target": "s109",
+          "lookAt": 187,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -68.49,
+          "atv": 8.73,
+          "target": "s110",
+          "lookAt": 94,
+          "rotate": -90
+        },
+        {
+          "id": "hs_4",
+          "ath": -26.34,
+          "atv": -6.08,
+          "target": "s201",
+          "lookAt": -58,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s109",
+      "title": "main bedroom",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 20.41,
+          "atv": 10.78,
+          "target": "s108",
+          "lookAt": -213,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s110",
+      "title": "Panorama 10",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -72.38,
+          "atv": 5.51,
+          "target": "s108",
+          "lookAt": 87,
+          "rotate": 45
+        },
+        {
+          "id": "hs_2",
+          "ath": -77.59,
+          "atv": 9.11,
+          "target": "s101",
+          "lookAt": 0,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s201",
+      "title": "Panorama 1",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -175.61,
+          "atv": 17.85,
+          "target": "s202",
+          "lookAt": 146,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -74.08,
+          "atv": 13.46,
+          "target": "s203",
+          "lookAt": 57,
+          "rotate": -45
+        },
+        {
+          "id": "hs_3",
+          "ath": 3.75,
+          "atv": 9.5,
+          "target": "s204",
+          "lookAt": -7,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -32.84,
+          "atv": 7.53,
+          "target": "s205",
+          "lookAt": -190,
+          "rotate": 0
+        },
+        {
+          "id": "hs_5",
+          "ath": -16.32,
+          "atv": 7.06,
+          "target": "s206",
+          "lookAt": -15,
+          "rotate": 0
+        },
+        {
+          "id": "hs_6",
+          "ath": 79.44,
+          "atv": 23.99,
+          "target": "s101",
+          "lookAt": 47,
+          "rotate": -135
+        }
+      ]
+    },
+    {
+      "id": "s202",
+      "title": "living room",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -34.32,
+          "atv": 9.02,
+          "target": "s201",
+          "lookAt": 7,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s203",
+      "title": "dining area",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -123.52,
+          "atv": 10.56,
+          "target": "s201",
+          "lookAt": 67,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -173.95,
+          "atv": 7.87,
+          "target": "s206",
+          "lookAt": 20,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -157.65,
+          "atv": 7.31,
+          "target": "s204",
+          "lookAt": 8.4,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s204",
+      "title": "Panorama 4",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 177.08,
+          "atv": 6.94,
+          "target": "s201",
+          "lookAt": -178,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -175.33,
+          "atv": 6.6,
+          "target": "s203",
+          "lookAt": 9,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s205",
+      "title": "hallway",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 3.47,
+          "atv": 9.34,
+          "target": "s201",
+          "lookAt": 123,
+          "rotate": 45
+        },
+        {
+          "id": "hs_2",
+          "ath": -46.99,
+          "atv": 11.82,
+          "target": "s206",
+          "lookAt": 20,
+          "rotate": -90
+        }
+      ]
+    },
+    {
+      "id": "s206",
+      "title": "bathroom 1",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -152.34,
+          "atv": 9.18,
+          "target": "s203",
+          "lookAt": -5.5,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 10.93,
+          "atv": 14.4,
+          "target": "s207",
+          "lookAt": -115,
+          "rotate": -45
+        },
+        {
+          "id": "hs_3",
+          "ath": 178.36,
+          "atv": 7.83,
+          "target": "s201",
+          "lookAt": 135,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -122.03,
+          "atv": 8.04,
+          "target": "s205",
+          "lookAt": 153,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s207",
+      "title": "guest bedroom",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 39.37,
+          "atv": 14.08,
+          "target": "s206",
+          "lookAt": 204,
+          "rotate": 90
+        }
+      ]
+    }
+  ]
+}

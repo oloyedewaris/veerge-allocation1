@@ -1,0 +1,1044 @@
+{
+  "type": "A",
+  "initialScene": "s309",
+  "scenes": [
+    {
+      "id": "s309",
+      "title": "Panorama 9",
+      "floor": 0,
+      "hlookat": 71.41,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 71.83,
+          "atv": 5.15,
+          "target": "s308",
+          "lookAt": -182,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s301",
+      "title": "Panorama 1",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 122.99,
+          "atv": 8.16,
+          "target": "s302",
+          "lookAt": 107.65,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -6.21,
+          "atv": 11.81,
+          "target": "s304",
+          "lookAt": -17,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 179.25,
+          "atv": 7.19,
+          "target": "s303",
+          "lookAt": 134,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -150.14,
+          "atv": -3.13,
+          "target": "s101",
+          "lookAt": -13.5,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s302",
+      "title": "Panorama 2",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -119.73,
+          "atv": 8,
+          "target": "s303",
+          "lookAt": -165,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -109.13,
+          "atv": 8,
+          "target": "s305",
+          "lookAt": 144,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -55.4,
+          "atv": 11.95,
+          "target": "s301",
+          "lookAt": -56.65,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 8.98,
+          "atv": 9.91,
+          "target": "s310",
+          "lookAt": 120,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s303",
+      "title": "Panorama 3",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 136.61,
+          "atv": 8.04,
+          "target": "s306",
+          "lookAt": 27,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -132.44,
+          "atv": 9.47,
+          "target": "s305",
+          "lookAt": 150.7,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 120.03,
+          "atv": 7.52,
+          "target": "s308",
+          "lookAt": -5,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 17.91,
+          "atv": 12.92,
+          "target": "s302",
+          "lookAt": 73,
+          "rotate": 0
+        },
+        {
+          "id": "hs_5",
+          "ath": -48.2,
+          "atv": 9.72,
+          "target": "s301",
+          "lookAt": 5.3,
+          "rotate": 0
+        },
+        {
+          "id": "hs_6",
+          "ath": -18.44,
+          "atv": 8.2,
+          "target": "s310",
+          "lookAt": 140,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s304",
+      "title": "Panorama 4",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 58.37,
+          "atv": 13.98,
+          "target": "s310",
+          "lookAt": -150,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 157.4,
+          "atv": 8.68,
+          "target": "s301",
+          "lookAt": -174,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 125.4,
+          "atv": 6.97,
+          "target": "s302",
+          "lookAt": 148,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s305",
+      "title": "Panorama 5",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -28.83,
+          "atv": 10.54,
+          "target": "s303",
+          "lookAt": 44.45,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -40.16,
+          "atv": 9.53,
+          "target": "s302",
+          "lookAt": 70,
+          "rotate": -45
+        }
+      ]
+    },
+    {
+      "id": "s306",
+      "title": "Panorama 6",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 36.15,
+          "atv": 5.4,
+          "target": "s307",
+          "lookAt": 17,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -30.62,
+          "atv": 7.2,
+          "target": "s308",
+          "lookAt": -46,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -140.32,
+          "atv": 8.37,
+          "target": "s303",
+          "lookAt": -31,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s307",
+      "title": "Panorama 7",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -103.86,
+          "atv": 6.73,
+          "target": "s308",
+          "lookAt": -110,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -151.15,
+          "atv": 3.81,
+          "target": "s306",
+          "lookAt": -140.53,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s308",
+      "title": "Panorama 8",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -4.21,
+          "atv": 9.15,
+          "target": "s309",
+          "lookAt": -108,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 121.37,
+          "atv": 10.3,
+          "target": "s306",
+          "lookAt": -211,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 59.21,
+          "atv": 10.14,
+          "target": "s307",
+          "lookAt": 83.43,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 149.79,
+          "atv": 11.12,
+          "target": "s303",
+          "lookAt": -87,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s310",
+      "title": "Panorama 10",
+      "floor": 0,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 1.43,
+          "atv": 8.46,
+          "target": "s304",
+          "lookAt": -125,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -45.05,
+          "atv": 5.11,
+          "target": "s302",
+          "lookAt": 195,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -31.14,
+          "atv": 5.43,
+          "target": "s303",
+          "lookAt": 160,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s101",
+      "title": "Panorama 1",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -107.28,
+          "atv": 13.04,
+          "target": "s103",
+          "lookAt": 9.17,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -17.68,
+          "atv": 13.46,
+          "target": "s102",
+          "lookAt": -93.43,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 82.03,
+          "atv": 11,
+          "target": "s106",
+          "lookAt": 0,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 59,
+          "atv": 11,
+          "target": "s109",
+          "lookAt": 134,
+          "rotate": 0
+        },
+        {
+          "id": "hs_5",
+          "ath": -171.07,
+          "atv": 21.67,
+          "target": "s301",
+          "lookAt": -274,
+          "rotate": -135
+        },
+        {
+          "id": "hs_6",
+          "ath": 116.81,
+          "atv": 6.65,
+          "target": "s201",
+          "lookAt": 30,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s102",
+      "title": "Panorama 2",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 81.13,
+          "atv": 14.38,
+          "target": "s101",
+          "lookAt": 166.82,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 130.89,
+          "atv": 8.27,
+          "target": "s103",
+          "lookAt": -39.4,
+          "rotate": 45
+        },
+        {
+          "id": "hs_3",
+          "ath": 33.31,
+          "atv": 6.59,
+          "target": "s106",
+          "lookAt": 31.8,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 14.11,
+          "atv": 7.64,
+          "target": "s109",
+          "lookAt": -209,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s103",
+      "title": "Panorama 3",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -173.28,
+          "atv": 12.12,
+          "target": "s101",
+          "lookAt": 76,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -88.92,
+          "atv": 10.31,
+          "target": "s104",
+          "lookAt": 157.2,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -6.23,
+          "atv": 9.03,
+          "target": "s105",
+          "lookAt": 136,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 172.24,
+          "atv": 11.9,
+          "target": "s102",
+          "lookAt": -50,
+          "rotate": -45
+        }
+      ]
+    },
+    {
+      "id": "s104",
+      "title": "Panorama 4",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -35.22,
+          "atv": 14.46,
+          "target": "s103",
+          "lookAt": 25,
+          "rotate": -45
+        }
+      ]
+    },
+    {
+      "id": "s105",
+      "title": "Panorama 5",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -43.11,
+          "atv": 11.09,
+          "target": "s103",
+          "lookAt": -171,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s106",
+      "title": "Panorama 6",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -7.83,
+          "atv": 11.62,
+          "target": "s108",
+          "lookAt": -32.43,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 133.63,
+          "atv": 10.77,
+          "target": "s107",
+          "lookAt": 10,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 170,
+          "atv": 9.99,
+          "target": "s101",
+          "lookAt": -105,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 178.95,
+          "atv": 9.84,
+          "target": "s102",
+          "lookAt": 219,
+          "rotate": 45
+        }
+      ]
+    },
+    {
+      "id": "s107",
+      "title": "Panorama 7",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -175.52,
+          "atv": 13.08,
+          "target": "s106",
+          "lookAt": -32,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -154.56,
+          "atv": 9.43,
+          "target": "s108",
+          "lookAt": -62,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s108",
+      "title": "Panorama 8",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 147.45,
+          "atv": 9.31,
+          "target": "s106",
+          "lookAt": -191,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 132.06,
+          "atv": 9.31,
+          "target": "s107",
+          "lookAt": 41,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s109",
+      "title": "Panorama 9",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -40.46,
+          "atv": 4.62,
+          "target": "s101",
+          "lookAt": -122,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 50.7,
+          "atv": 12.45,
+          "target": "s110",
+          "lookAt": 72,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 145.77,
+          "atv": 7.59,
+          "target": "s111",
+          "lookAt": 165,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -18.04,
+          "atv": 4.16,
+          "target": "s102",
+          "lookAt": -176.25,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s110",
+      "title": "Panorama 10",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -97.58,
+          "atv": 14,
+          "target": "s109",
+          "lookAt": -29,
+          "rotate": 45
+        },
+        {
+          "id": "hs_2",
+          "ath": -129.14,
+          "atv": 14,
+          "target": "s111",
+          "lookAt": -192,
+          "rotate": -90
+        }
+      ]
+    },
+    {
+      "id": "s111",
+      "title": "Panorama 11",
+      "floor": 1,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -19.55,
+          "atv": 11.6,
+          "target": "s109",
+          "lookAt": -27,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -12.46,
+          "atv": 11.6,
+          "target": "s110",
+          "lookAt": 77,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s201",
+      "title": "Panorama 1",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -159.59,
+          "atv": 29.61,
+          "target": "s101",
+          "lookAt": -13.5,
+          "rotate": -135
+        },
+        {
+          "id": "hs_2",
+          "ath": -76.16,
+          "atv": 8.03,
+          "target": "s208",
+          "lookAt": 56.4,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": -35.64,
+          "atv": 11.66,
+          "target": "s202",
+          "lookAt": -90,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": 18.92,
+          "atv": 11.01,
+          "target": "s203",
+          "lookAt": 83,
+          "rotate": 0
+        },
+        {
+          "id": "hs_5",
+          "ath": 102.96,
+          "atv": 8.21,
+          "target": "s207",
+          "lookAt": -91,
+          "rotate": 0
+        },
+        {
+          "id": "hs_6",
+          "ath": 10.73,
+          "atv": 11.16,
+          "target": "s205",
+          "lookAt": -194,
+          "rotate": -90
+        },
+        {
+          "id": "hs_7",
+          "ath": 29.61,
+          "atv": 10.12,
+          "target": "s204",
+          "lookAt": -4,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s202",
+      "title": "Panorama 2",
+      "floor": 2,
+      "hlookat": -110,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 104.41,
+          "atv": 20.17,
+          "target": "s201",
+          "lookAt": 186,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s203",
+      "title": "Panorama 3",
+      "floor": 2,
+      "hlookat": 78,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -102.21,
+          "atv": 12.5,
+          "target": "s201",
+          "lookAt": -167.3,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 2.51,
+          "atv": 5.22,
+          "target": "s205",
+          "lookAt": -194.3,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 165.07,
+          "atv": 11.31,
+          "target": "s204",
+          "lookAt": 0,
+          "rotate": 0
+        },
+        {
+          "id": "hs_4",
+          "ath": -113.2,
+          "atv": 12.5,
+          "target": "s207",
+          "lookAt": -92,
+          "rotate": -90
+        },
+        {
+          "id": "hs_5",
+          "ath": -89.87,
+          "atv": 12.5,
+          "target": "s208",
+          "lookAt": 59,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s204",
+      "title": "Panorama 4",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 179.23,
+          "atv": 10.5,
+          "target": "s203",
+          "lookAt": -17,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 89.24,
+          "atv": 9.69,
+          "target": "s206",
+          "lookAt": 4,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 160.88,
+          "atv": 10.5,
+          "target": "s201",
+          "lookAt": -167,
+          "rotate": -90
+        }
+      ]
+    },
+    {
+      "id": "s205",
+      "title": "Panorama 5",
+      "floor": 2,
+      "hlookat": -100,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -13.52,
+          "atv": 15.72,
+          "target": "s203",
+          "lookAt": 166,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": 7.81,
+          "atv": 15.72,
+          "target": "s201",
+          "lookAt": -167,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s206",
+      "title": "Panorama 6",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -175.49,
+          "atv": 18.51,
+          "target": "s204",
+          "lookAt": -92.5,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s207",
+      "title": "Panorama 7",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 91.52,
+          "atv": 10.91,
+          "target": "s201",
+          "lookAt": -74.4,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -124.27,
+          "atv": 13.59,
+          "target": "s209",
+          "lookAt": -163,
+          "rotate": 0
+        },
+        {
+          "id": "hs_3",
+          "ath": 100.93,
+          "atv": 10.66,
+          "target": "s203",
+          "lookAt": 83.4,
+          "rotate": 90
+        }
+      ]
+    },
+    {
+      "id": "s208",
+      "title": "Panorama 8",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -123.94,
+          "atv": 10,
+          "target": "s201",
+          "lookAt": 100,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -132.05,
+          "atv": 10,
+          "target": "s203",
+          "lookAt": 79,
+          "rotate": -90
+        }
+      ]
+    },
+    {
+      "id": "s209",
+      "title": "Panorama 9",
+      "floor": 2,
+      "hlookat": -93,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": 11.48,
+          "atv": 17.01,
+          "target": "s207",
+          "lookAt": 23,
+          "rotate": 0
+        },
+        {
+          "id": "hs_2",
+          "ath": -58.54,
+          "atv": 12.2,
+          "target": "s210",
+          "lookAt": 78,
+          "rotate": 0
+        }
+      ]
+    },
+    {
+      "id": "s210",
+      "title": "Panorama 10",
+      "floor": 2,
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 120,
+      "hotspots": [
+        {
+          "id": "hs_1",
+          "ath": -125.82,
+          "atv": 9.45,
+          "target": "s209",
+          "lookAt": 131,
+          "rotate": 0
+        }
+      ]
+    }
+  ]
+}

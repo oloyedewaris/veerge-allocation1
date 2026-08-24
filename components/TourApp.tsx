@@ -22,16 +22,40 @@ const siteLayers = [
   "date/objects3d/10/86-g_three_1.glb",
   "date/objects3d/11/87-g_three_2.glb",
   "date/objects3d/12/mod/g_three_3.glb",
-  "date/objects3d/13/mod/g_three_1.glb"
+  "date/objects3d/13/mod/g_three_1.glb",
 ];
 
 const villaLayers = [
-  { type: "A", placement: "date/objects3d/21/json_27.json", model: "date/objects3d/22/151-g_Type_A_L_object.glb" },
-  { type: "A", placement: "date/objects3d/24/json_0.json", model: "date/objects3d/25/167-g_Type_A_R_object.glb" },
-  { type: "B", placement: "date/objects3d/27/json_25.json", model: "date/objects3d/28/236-g_Type_B_L_object.glb" },
-  { type: "B", placement: "date/objects3d/30/json_80.json", model: "date/objects3d/31/240-g_Type_B_R_object.glb" },
-  { type: "C", placement: "date/objects3d/33/json_53.json", model: "date/objects3d/34/212-g_Type_C_L_object.glb" },
-  { type: "C", placement: "date/objects3d/37/json_66.json", model: "date/objects3d/38/221-g_Type_C_R_object.glb" }
+  {
+    type: "A",
+    placement: "date/objects3d/21/json_27.json",
+    model: "date/objects3d/22/151-g_Type_A_L_object.glb",
+  },
+  {
+    type: "A",
+    placement: "date/objects3d/24/json_0.json",
+    model: "date/objects3d/25/167-g_Type_A_R_object.glb",
+  },
+  {
+    type: "B",
+    placement: "date/objects3d/27/json_25.json",
+    model: "date/objects3d/28/236-g_Type_B_L_object.glb",
+  },
+  {
+    type: "B",
+    placement: "date/objects3d/30/json_80.json",
+    model: "date/objects3d/31/240-g_Type_B_R_object.glb",
+  },
+  {
+    type: "C",
+    placement: "date/objects3d/33/json_53.json",
+    model: "date/objects3d/34/212-g_Type_C_L_object.glb",
+  },
+  {
+    type: "C",
+    placement: "date/objects3d/37/json_66.json",
+    model: "date/objects3d/38/221-g_Type_C_R_object.glb",
+  },
 ] as const;
 
 type TextureSpec = {
@@ -48,34 +72,49 @@ type TextureMap = Record<string, TextureSpec>;
 // mappings reproduce the custom loader's object -> material -> texture step.
 const siteTextures: Record<string, TextureMap> = {
   "date/objects3d/40/335-Plane_006.glb": {
-    "*": { path: "date/textures/35/365-364-icon.png", repeat: [20, -20] }
+    "*": { path: "date/textures/35/365-364-icon.png", repeat: [20, -20] },
   },
   "date/objects3d/51/mod/Outer_Fence.glb": {
-    "*": { path: "date/textures/59/454-FENCE.jpg", repeat: [0.3, 0.3] }
+    "*": { path: "date/textures/59/454-FENCE.jpg", repeat: [0.3, 0.3] },
   },
   "date/objects3d/55/mod/road.glb": {
     parking: { path: "date/textures/61/458-parking.jpg", repeat: [0.3, 0.3] },
     sidewalk: { path: "date/textures/63/468-sidewalk.jpg", repeat: [0.3, 0.3] },
     roads: { path: "date/textures/62/465-roads.jpg", repeat: [0.1, 0.1] },
     grass: { path: "date/textures/60/456-grass.png", repeat: [0.1, 0.1] },
-    border_drainage: { path: "date/textures/58/452-border_drainage.jpg", repeat: [0.3, 0.3] }
+    border_drainage: {
+      path: "date/textures/58/452-border_drainage.jpg",
+      repeat: [0.3, 0.3],
+    },
   },
   "date/objects3d/36/206-g_Building 2 Scaled.glb": {
-    g_Hospital_Web_object: { path: "date/textures/15/83-icon.png", emissive: "#242424" },
-    g_Mall_Web_object: { path: "date/textures/16/85-icon.png", emissive: "#242424" },
-    g_GenPlan_Building_2_2_Web_object: { path: "date/textures/18/89-icon.png", specular: "#242424" },
-    g_GenPlan_Building_2_1_Web_object: { path: "date/textures/17/87-icon.png", emissive: "#242424" },
-    Mosque_Web002: { path: "date/textures/23/121-Mosque_Web_Color.jpg" }
+    g_Hospital_Web_object: {
+      path: "date/textures/15/83-icon.png",
+      emissive: "#242424",
+    },
+    g_Mall_Web_object: {
+      path: "date/textures/16/85-icon.png",
+      emissive: "#242424",
+    },
+    g_GenPlan_Building_2_2_Web_object: {
+      path: "date/textures/18/89-icon.png",
+      specular: "#242424",
+    },
+    g_GenPlan_Building_2_1_Web_object: {
+      path: "date/textures/17/87-icon.png",
+      emissive: "#242424",
+    },
+    Mosque_Web002: { path: "date/textures/23/121-Mosque_Web_Color.jpg" },
   },
   "date/objects3d/5/mod/g_Building_.glb": {
-    "*": { path: "date/textures/4/11-icon.png", emissive: "#161616" }
-  }
+    "*": { path: "date/textures/4/11-icon.png", emissive: "#161616" },
+  },
 };
 
 const villaTextures: Record<string, TextureMap> = {
   A: { "*": { path: "date/textures/20/471-Type_A_Web_Color.jpg" } },
   B: { "*": { path: "date/textures/21/99-icon.png" } },
-  C: { "*": { path: "date/textures/1/4-icon.png" } }
+  C: { "*": { path: "date/textures/1/4-icon.png" } },
 };
 
 const foliageColors: Record<string, string> = {
@@ -83,20 +122,51 @@ const foliageColors: Record<string, string> = {
   "date/objects3d/11/87-g_three_2.glb": "#435f2b",
   "date/objects3d/12/mod/g_three_3.glb": "#4d6b30",
   "date/objects3d/13/mod/g_three_1.glb": "#395a27",
-  "date/objects3d/19/90-g_three_palms.glb": "#536a31"
+  "date/objects3d/19/90-g_three_palms.glb": "#536a31",
 };
 
-type PlacementNode = [string, number, number, number, number, number, number, number, number, number, unknown[]];
+type PlacementNode = [
+  string,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  unknown[],
+];
 
-function VillaInstances({ placement, model, type, visible }: { placement: string; model: string; type: string; visible: boolean }) {
+function VillaInstances({
+  placement,
+  model,
+  type,
+  visible,
+}: {
+  placement: string;
+  model: string;
+  type: string;
+  visible: boolean;
+}) {
   const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(model)}`);
-  const rawPlacement = useLoader(THREE.FileLoader, `${ASSET_ROOT}${encodeURI(placement)}`);
+  const rawPlacement = useLoader(
+    THREE.FileLoader,
+    `${ASSET_ROOT}${encodeURI(placement)}`,
+  );
   const textureSpec = villaTextures[type]["*"];
-  const texture = useLoader(THREE.TextureLoader, `${ASSET_ROOT}${encodeURI(textureSpec.path)}`);
+  const texture = useLoader(
+    THREE.TextureLoader,
+    `${ASSET_ROOT}${encodeURI(textureSpec.path)}`,
+  );
   const [hoveredVilla, setHoveredVilla] = useState<string | null>(null);
 
   const instances = useMemo(() => {
-    const raw = typeof rawPlacement === "string" ? rawPlacement : new TextDecoder().decode(rawPlacement as ArrayBuffer);
+    const raw =
+      typeof rawPlacement === "string"
+        ? rawPlacement
+        : new TextDecoder().decode(rawPlacement as ArrayBuffer);
     const nodes = (JSON.parse(raw).three?.[10] ?? []) as PlacementNode[];
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.flipY = false;
@@ -110,7 +180,7 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
       emissive: new THREE.Color("#242424"),
       specular: new THREE.Color(type === "B" ? "#050505" : "#111111"),
       shininess: type === "B" ? 77.51 : 30,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     });
     const glassMaterial = new THREE.MeshPhongMaterial({
       color: "#636363",
@@ -119,7 +189,7 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
       opacity: 0.73,
       transparent: true,
       depthWrite: true,
-      side: THREE.FrontSide
+      side: THREE.FrontSide,
     });
 
     return nodes.map((node) => {
@@ -129,7 +199,7 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
       object.rotation.set(
         THREE.MathUtils.degToRad(node[4]),
         THREE.MathUtils.degToRad(node[5]),
-        THREE.MathUtils.degToRad(node[6])
+        THREE.MathUtils.degToRad(node[6]),
       );
       object.scale.set(node[7], node[8], node[9]);
       let meshIndex = 0;
@@ -152,18 +222,26 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
   }, [gltf.scene, rawPlacement, texture, type]);
 
   useEffect(() => {
-    instances.forEach((villa) => villa.traverse((child) => {
-      if (!(child instanceof THREE.Mesh)) return;
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((rawMaterial) => {
-        const material = rawMaterial as THREE.MeshPhongMaterial;
-        if (!material.emissive) return;
-        const active = villa.name === hoveredVilla;
-        material.emissive.setHex(active ? 0x10b39b : (material.userData.baseEmissive ?? 0x000000));
-        material.emissiveIntensity = active ? 0.62 : (material.userData.baseEmissiveIntensity ?? 1);
-        material.needsUpdate = true;
-      });
-    }));
+    instances.forEach((villa) =>
+      villa.traverse((child) => {
+        if (!(child instanceof THREE.Mesh)) return;
+        const materials = Array.isArray(child.material)
+          ? child.material
+          : [child.material];
+        materials.forEach((rawMaterial) => {
+          const material = rawMaterial as THREE.MeshPhongMaterial;
+          if (!material.emissive) return;
+          const active = villa.name === hoveredVilla;
+          material.emissive.setHex(
+            active ? 0x10b39b : (material.userData.baseEmissive ?? 0x000000),
+          );
+          material.emissiveIntensity = active
+            ? 0.62
+            : (material.userData.baseEmissiveIntensity ?? 1);
+          material.needsUpdate = true;
+        });
+      }),
+    );
   }, [hoveredVilla, instances]);
 
   const openUnit = (event: ThreeEvent<MouseEvent>, objectName: string) => {
@@ -175,16 +253,44 @@ function VillaInstances({ placement, model, type, visible }: { placement: string
     if (unitId) window.location.assign(`/?villa=${unitId}`);
   };
 
-  return <group visible={visible}>{instances.map((object) => <primitive
-    key={object.name}
-    object={object}
-    onClick={(event: ThreeEvent<MouseEvent>) => openUnit(event, object.name)}
-    onPointerOver={(event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); setHoveredVilla(object.name); document.body.style.cursor = "pointer"; }}
-    onPointerOut={(event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); setHoveredVilla((current) => current === object.name ? null : current); document.body.style.cursor = "default"; }}
-  />)}</group>;
+  return (
+    <group visible={visible}>
+      {instances.map((object) => (
+        <primitive
+          key={object.name}
+          object={object}
+          onClick={(event: ThreeEvent<MouseEvent>) =>
+            openUnit(event, object.name)
+          }
+          onPointerOver={(event: ThreeEvent<PointerEvent>) => {
+            event.stopPropagation();
+            setHoveredVilla(object.name);
+            document.body.style.cursor = "pointer";
+          }}
+          onPointerOut={(event: ThreeEvent<PointerEvent>) => {
+            event.stopPropagation();
+            setHoveredVilla((current) =>
+              current === object.name ? null : current,
+            );
+            document.body.style.cursor = "default";
+          }}
+        />
+      ))}
+    </group>
+  );
 }
 
-function ModelScene({ path, visible, textures, loadedTextures }: { path: string; visible: boolean; textures: TextureMap; loadedTextures: THREE.Texture[] }) {
+function ModelScene({
+  path,
+  visible,
+  textures,
+  loadedTextures,
+}: {
+  path: string;
+  visible: boolean;
+  textures: TextureMap;
+  loadedTextures: THREE.Texture[];
+}) {
   const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(path)}`);
   const entries = useMemo(() => Object.entries(textures), [textures]);
   const scene = useMemo(() => {
@@ -192,18 +298,20 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
     // The legacy object's root override lowers the baked map below all 3D
     // geometry, preventing coplanar depth conflicts.
     if (path === "date/objects3d/40/335-Plane_006.glb") clone.position.y = -10;
-    const textureByMesh = new Map(entries.map(([name, spec], index) => {
-      const texture = loadedTextures[index];
-      texture.colorSpace = THREE.SRGBColorSpace;
-      // GLTF UVs use a bottom-left texture origin. TextureLoader defaults to
-      // the opposite convention, which was putting the atlas' black padding
-      // over roofs and facades.
-      texture.flipY = false;
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      if (spec.repeat) texture.repeat.set(...spec.repeat);
-      texture.needsUpdate = true;
-      return [name, { texture, spec }] as const;
-    }));
+    const textureByMesh = new Map(
+      entries.map(([name, spec], index) => {
+        const texture = loadedTextures[index];
+        texture.colorSpace = THREE.SRGBColorSpace;
+        // GLTF UVs use a bottom-left texture origin. TextureLoader defaults to
+        // the opposite convention, which was putting the atlas' black padding
+        // over roofs and facades.
+        texture.flipY = false;
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        if (spec.repeat) texture.repeat.set(...spec.repeat);
+        texture.needsUpdate = true;
+        return [name, { texture, spec }] as const;
+      }),
+    );
     clone.traverse((object) => {
       if (object instanceof THREE.Mesh) {
         object.castShadow = true;
@@ -211,17 +319,21 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
         const mapped = textureByMesh.get(object.name) ?? textureByMesh.get("*");
         if (mapped) {
           const { texture: map, spec } = mapped;
-          const previous = Array.isArray(object.material) ? object.material[0] : object.material;
+          const previous = Array.isArray(object.material)
+            ? object.material[0]
+            : object.material;
           object.material = new THREE.MeshPhongMaterial({
             map,
             color: spec.color ?? "#ffffff",
             emissive: new THREE.Color(spec.emissive ?? "#000000"),
             specular: new THREE.Color(spec.specular ?? "#111111"),
             shininess: spec.shininess ?? 30,
-            side: previous?.side ?? THREE.FrontSide
+            side: previous?.side ?? THREE.FrontSide,
           });
         } else if (/tree|palm/i.test(object.name)) {
-          const material = Array.isArray(object.material) ? object.material[0] : object.material;
+          const material = Array.isArray(object.material)
+            ? object.material[0]
+            : object.material;
           object.material = material.clone();
           object.material.color.set(foliageColors[path] ?? "#46642d");
           if ("emissive" in object.material) {
@@ -236,76 +348,139 @@ function ModelScene({ path, visible, textures, loadedTextures }: { path: string;
   return <primitive object={scene} visible={visible} />;
 }
 
-function TexturedModel({ path, visible, textures }: { path: string; visible: boolean; textures: TextureMap }) {
+function TexturedModel({
+  path,
+  visible,
+  textures,
+}: {
+  path: string;
+  visible: boolean;
+  textures: TextureMap;
+}) {
   const loadedTextures = useLoader(
     THREE.TextureLoader,
-    Object.values(textures).map((spec) => `${ASSET_ROOT}${encodeURI(spec.path)}`)
+    Object.values(textures).map(
+      (spec) => `${ASSET_ROOT}${encodeURI(spec.path)}`,
+    ),
   );
-  return <ModelScene path={path} visible={visible} textures={textures} loadedTextures={loadedTextures} />;
+  return (
+    <ModelScene
+      path={path}
+      visible={visible}
+      textures={textures}
+      loadedTextures={loadedTextures}
+    />
+  );
 }
 
-function Model({ path, visible = true, textures }: { path: string; visible?: boolean; textures?: TextureMap }) {
+function Model({
+  path,
+  visible = true,
+  textures,
+}: {
+  path: string;
+  visible?: boolean;
+  textures?: TextureMap;
+}) {
   if (textures && Object.keys(textures).length > 0) {
     return <TexturedModel path={path} visible={visible} textures={textures} />;
   }
-  return <ModelScene path={path} visible={visible} textures={{}} loadedTextures={[]} />;
+  return (
+    <ModelScene
+      path={path}
+      visible={visible}
+      textures={{}}
+      loadedTextures={[]}
+    />
+  );
 }
 
-function CameraRig({ controls }: { controls: React.RefObject<OrbitControlsImpl | null> }) {
+function CameraRig({
+  controls,
+}: {
+  controls: React.RefObject<OrbitControlsImpl | null>;
+}) {
   const { camera } = useThree();
   useEffect(() => {
     camera.position.set(-270, 195, 0);
     camera.lookAt(0, 0, 0);
   }, [camera]);
-  return <OrbitControls
-    ref={controls}
-    makeDefault
-    target={[0, 0, 0]}
-    minDistance={260}
-    maxDistance={2400}
-    minPolarAngle={0.16}
-    maxPolarAngle={1.38}
-    enablePan
-    screenSpacePanning
-    enableDamping
-    dampingFactor={0.075}
-  />;
+  return (
+    <OrbitControls
+      ref={controls}
+      makeDefault
+      target={[0, 0, 0]}
+      minDistance={260}
+      maxDistance={2400}
+      minPolarAngle={0.16}
+      maxPolarAngle={1.38}
+      enablePan
+      screenSpacePanning
+      enableDamping
+      dampingFactor={0.075}
+    />
+  );
 }
 
-function Masterplan({ activeTypes, controls }: { activeTypes: Set<string>; controls: React.RefObject<OrbitControlsImpl | null> }) {
-  return <>
-    <color attach="background" args={["#cbb486"]} />
-    <fog attach="fog" args={["#ffffff", 820, 2800]} />
-    <ambientLight intensity={1.15} color="#ffffff" />
-    <directionalLight
-      castShadow
-      intensity={0.65}
-      color="#ffffff"
-      position={[450, 900, -700]}
-      shadow-mapSize={[4096, 4096]}
-      shadow-bias={0.001}
-      shadow-radius={1}
-    />
-    <group scale={0.82}>
-      {siteLayers.map((path) => <Suspense key={path} fallback={null}><Model path={path} textures={siteTextures[path]} /></Suspense>)}
-      {villaLayers.map(({ type, placement, model }) => <Suspense key={placement} fallback={null}><VillaInstances placement={placement} model={model} type={type} visible={activeTypes.has(type)} /></Suspense>)}
-    </group>
-    <CameraRig controls={controls} />
-  </>;
+function Masterplan({
+  activeTypes,
+  controls,
+}: {
+  activeTypes: Set<string>;
+  controls: React.RefObject<OrbitControlsImpl | null>;
+}) {
+  return (
+    <>
+      <color attach="background" args={["#cbb486"]} />
+      <fog attach="fog" args={["#ffffff", 820, 2800]} />
+      <ambientLight intensity={1.15} color="#ffffff" />
+      <directionalLight
+        castShadow
+        intensity={0.65}
+        color="#ffffff"
+        position={[450, 900, -700]}
+        shadow-mapSize={[4096, 4096]}
+        shadow-bias={0.001}
+        shadow-radius={1}
+      />
+      <group scale={0.82}>
+        {siteLayers.map((path) => (
+          <Suspense key={path} fallback={null}>
+            <Model path={path} textures={siteTextures[path]} />
+          </Suspense>
+        ))}
+        {villaLayers.map(({ type, placement, model }) => (
+          <Suspense key={placement} fallback={null}>
+            <VillaInstances
+              placement={placement}
+              model={model}
+              type={type}
+              visible={activeTypes.has(type)}
+            />
+          </Suspense>
+        ))}
+      </group>
+      <CameraRig controls={controls} />
+    </>
+  );
 }
 
 function MasterplanApp() {
   const [language, setLanguage] = useState<"en" | "ar">("en");
-  const [activeTypes, setActiveTypes] = useState(() => new Set(["A", "B", "C"]));
+  const [activeTypes, setActiveTypes] = useState(
+    () => new Set(["A", "B", "C"]),
+  );
   const [filterOpen, setFilterOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const controls = useRef<OrbitControlsImpl>(null);
 
-  const toggleType = (type: string) => setActiveTypes((current) => {
-    const next = new Set(current);
-    if (next.has(type)) next.delete(type); else next.add(type);
-    return next;
-  });
+  const toggleType = (type: string) =>
+    setActiveTypes((current) => {
+      const next = new Set(current);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
   const zoom = (factor: number) => {
     const camera = controls.current?.object;
     if (!camera) return;
@@ -314,53 +489,124 @@ function MasterplanApp() {
     controls.current?.update();
   };
 
-  return <main className="masterplan-app" dir={language === "ar" ? "rtl" : "ltr"}>
-    <div className="masterplan-canvas">
-      <Canvas
-        shadows
-        frameloop="demand"
-        dpr={[1, 1.5]}
-        performance={{ min: 0.6 }}
-        camera={{ fov: 45, near: 1, far: 10000 }}
-        gl={{
-          antialias: true,
-          powerPreference: "high-performance",
-          outputColorSpace: THREE.SRGBColorSpace,
-          toneMapping: THREE.NoToneMapping,
-          toneMappingExposure: 1
-        }}
-      >
-        <Masterplan activeTypes={activeTypes} controls={controls} />
-      </Canvas>
-    </div>
+  return (
+    <main className="masterplan-app" dir={language === "ar" ? "rtl" : "ltr"}>
+      <div className="masterplan-canvas">
+        <Canvas
+          shadows
+          frameloop="demand"
+          dpr={[1, 1.5]}
+          performance={{ min: 0.6 }}
+          camera={{ fov: 45, near: 1, far: 10000 }}
+          gl={{
+            antialias: true,
+            powerPreference: "high-performance",
+            outputColorSpace: THREE.SRGBColorSpace,
+            toneMapping: THREE.NoToneMapping,
+            toneMappingExposure: 1,
+          }}
+        >
+          <Masterplan activeTypes={activeTypes} controls={controls} />
+        </Canvas>
+      </div>
 
-    <div className="view-switch" aria-label="View mode">
-      <button className="selected">Map</button><span>›</span><button>Area</button>
-    </div>
+      <div className="view-switch" aria-label="View mode">
+        <button className="selected">Map</button>
+        <span>›</span>
+        <button>Area</button>
+      </div>
 
-    <section className="map-filters">
-      <div className="type-filter"><span>Types</span>{["A", "B", "C"].map((type) => <button key={type} className={activeTypes.has(type) ? "active" : ""} onClick={() => toggleType(type)}>{type}</button>)}</div>
-      <button className="filter-toggle" onClick={() => setFilterOpen(!filterOpen)}><b>Filter</b><ChevronDown className={filterOpen ? "open" : ""} /></button>
-      {filterOpen && <div className="filter-panel"><span>Availability</span><label><input type="checkbox" defaultChecked /> Available units</label><label><input type="checkbox" /> Sold units</label></div>}
-    </section>
+      <section className="map-filters">
+        <div className="type-filter">
+          <span>Types</span>
+          {["A", "B", "C"].map((type) => (
+            <button
+              key={type}
+              className={activeTypes.has(type) ? "active" : ""}
+              onClick={() => toggleType(type)}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+        <button
+          className="filter-toggle"
+          onClick={() => setFilterOpen(!filterOpen)}
+        >
+          <b>Filter</b>
+          <ChevronDown className={filterOpen ? "open" : ""} />
+        </button>
+        {filterOpen && (
+          <div className="filter-panel">
+            <span>Availability</span>
+            <label>
+              <input type="checkbox" defaultChecked /> Available units
+            </label>
+            <label>
+              <input type="checkbox" /> Sold units
+            </label>
+          </div>
+        )}
+      </section>
 
-    <img className="map-logo" src={`${ASSET_ROOT}date/info/96/117-Tilal_wht.svg`} alt="Tilal" />
+      <img
+        className="map-logo"
+        src={`${ASSET_ROOT}date/info/96/117-Tilal_wht.svg`}
+        alt="Tilal"
+      />
 
-    <div className="language-switch">
-      <button className={language === "en" ? "active" : ""} onClick={() => setLanguage("en")}>EN</button>
-      <button className={language === "ar" ? "active" : ""} onClick={() => setLanguage("ar")}>AR</button>
-    </div>
-    <div className="menu-wrap">
-      <button className="main-menu" onClick={() => setMenuOpen(!menuOpen)}><MenuIcon /> <span>Menu</span></button>
-      {menuOpen && <nav className="menu-panel"><button>Masterplan</button><button>About Tilal</button><button>Location</button><button>Contact</button></nav>}
-    </div>
+      <div className="language-switch">
+        <button
+          className={language === "en" ? "active" : ""}
+          onClick={() => setLanguage("en")}
+        >
+          EN
+        </button>
+        <button
+          className={language === "ar" ? "active" : ""}
+          onClick={() => setLanguage("ar")}
+        >
+          AR
+        </button>
+      </div>
+      <div className="menu-wrap">
+        <button className="main-menu" onClick={() => setMenuOpen(!menuOpen)}>
+          <MenuIcon /> <span>Menu</span>
+        </button>
+        {menuOpen && (
+          <nav className="menu-panel">
+            <button>Masterplan</button>
+            <button>About Tilal</button>
+            <button>Location</button>
+            <button>Contact</button>
+          </nav>
+        )}
+      </div>
 
-    <div className="zoom-tools"><button onClick={() => zoom(0.82)} aria-label="Zoom in"><Plus /></button><button onClick={() => zoom(1.22)} aria-label="Zoom out"><Minus /></button></div>
-    <div className="compass" aria-label="Compass"><i>N</i><span>W</span><b>▲</b><span>E</span><i>S</i></div>
-  </main>;
+      <div className="zoom-tools">
+        <button onClick={() => zoom(0.82)} aria-label="Zoom in">
+          <Plus />
+        </button>
+        <button onClick={() => zoom(1.22)} aria-label="Zoom out">
+          <Minus />
+        </button>
+      </div>
+      <div className="compass" aria-label="Compass">
+        <i>N</i>
+        <span>W</span>
+        <b>▲</b>
+        <span>E</span>
+        <i>S</i>
+      </div>
+    </main>
+  );
 }
 
 export default function TourApp() {
-  const [villaId] = useState(() => typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("villa"));
+  const [villaId] = useState(() =>
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("villa"),
+  );
   return villaId ? <UnitDetails unitId={villaId} /> : <MasterplanApp />;
 }
