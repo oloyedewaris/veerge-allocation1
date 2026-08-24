@@ -2,7 +2,7 @@
 
 import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF, useProgress } from "@react-three/drei";
 import {
   ChevronDown,
   Menu as MenuIcon,
@@ -496,8 +496,8 @@ function Masterplan({
     <>
       <color attach="background" args={["#ffffff"]} />
       <fog attach="fog" args={["#ffffff", 820, 2800]} />
-      <ambientLight intensity={0.82} color="#fffaf2" />
-      <hemisphereLight args={["#fffdf8", "#c8ae7f", 0.12]} />
+      <ambientLight intensity={1.7} color="#ffffff" />
+      <hemisphereLight args={["#ffffff", "#e8d9bb", 0.38]} />
       <directionalLight
         castShadow
         intensity={1.55}
@@ -540,6 +540,12 @@ function Masterplan({
 }
 
 function MasterplanApp() {
+  const {
+    active: assetsLoading,
+    progress,
+    loaded: loadedAssets,
+    total: totalAssets,
+  } = useProgress();
   const [language, setLanguage] = useState<"en" | "ar">("en");
   const [activeTypes, setActiveTypes] = useState(
     () => new Set(["A", "B", "C"]),
@@ -549,6 +555,8 @@ function MasterplanApp() {
   const [available, setAvailable] = useState(true);
   const [allocated, setAllocated] = useState(true);
   const [units, setUnits] = useState<UnitRecord[]>([]);
+  const [unitsReady, setUnitsReady] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
   const controls = useRef<OrbitControlsImpl>(null);
 
   useEffect(() => {
@@ -558,8 +566,30 @@ function MasterplanApp() {
           throw new Error(`Unable to load units (${response.status})`);
         return response.json() as Promise<UnitRecord[]>;
       })
-      .then(setUnits);
+      .then(setUnits)
+      .catch((error) => console.error(error))
+      .finally(() => setUnitsReady(true));
   }, []);
+
+  useEffect(() => {
+    if (
+      sceneReady ||
+      !unitsReady ||
+      assetsLoading ||
+      totalAssets === 0 ||
+      loadedAssets !== totalAssets
+    )
+      return;
+
+    const frame = requestAnimationFrame(() => setSceneReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, [
+    assetsLoading,
+    loadedAssets,
+    sceneReady,
+    totalAssets,
+    unitsReady,
+  ]);
 
   const unitStatuses = useMemo(
     () =>
@@ -598,7 +628,16 @@ function MasterplanApp() {
     controls.current?.update();
   };
   return (
-    <main className="masterplan-app" dir={language === "ar" ? "rtl" : "ltr"}>
+    <main
+      className={`masterplan-app ${sceneReady ? "scene-ready" : "scene-loading"}`}
+      dir={language === "ar" ? "rtl" : "ltr"}
+    >
+      {!sceneReady && (
+        <div className="scene-loader" role="status" aria-live="polite">
+          <span className="loader" />
+          <small>{Math.round(progress)}%</small>
+        </div>
+      )}
       <div className="masterplan-canvas">
         <Canvas
           shadows="soft"
