@@ -3,13 +3,29 @@
 import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import { ChevronDown, Menu as MenuIcon, Minus, Plus } from "lucide-react";
+import {
+  ChevronDown,
+  Menu as MenuIcon,
+  MessageCircle,
+  Minus,
+  Phone,
+  Plus,
+} from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import UnitDetails from "./UnitDetails";
 
 const ASSET_ROOT = "/reference-assets/";
+const AVAILABLE_COLOR = "#1B7F63";
+const ALLOCATED_COLOR = "#9AA6B4";
+
+type UnitRecord = { id: string; model: string; availability: string };
+type UnitStatus = "available" | "allocated";
+
+function getUnitStatus(availability: string): UnitStatus {
+  return availability.trim() === "Availabel." ? "available" : "allocated";
+}
 
 const siteLayers = [
   "date/objects3d/40/335-Plane_006.glb",
@@ -81,7 +97,11 @@ const siteTextures: Record<string, TextureMap> = {
     parking: { path: "date/textures/61/458-parking.jpg", repeat: [0.3, 0.3] },
     sidewalk: { path: "date/textures/63/468-sidewalk.jpg", repeat: [0.3, 0.3] },
     roads: { path: "date/textures/62/465-roads.jpg", repeat: [0.1, 0.1] },
-    grass: { path: "date/textures/60/456-grass.png", repeat: [0.1, 0.1] },
+    grass: {
+      path: "date/textures/60/456-grass.png",
+      repeat: [0.1, 0.1],
+      color: "#d2df99",
+    },
     border_drainage: {
       path: "date/textures/58/452-border_drainage.jpg",
       repeat: [0.3, 0.3],
@@ -118,11 +138,11 @@ const villaTextures: Record<string, TextureMap> = {
 };
 
 const foliageColors: Record<string, string> = {
-  "date/objects3d/10/86-g_three_1.glb": "#536f32",
-  "date/objects3d/11/87-g_three_2.glb": "#435f2b",
-  "date/objects3d/12/mod/g_three_3.glb": "#4d6b30",
-  "date/objects3d/13/mod/g_three_1.glb": "#395a27",
-  "date/objects3d/19/90-g_three_palms.glb": "#536a31",
+  "date/objects3d/10/86-g_three_1.glb": "#31551f",
+  "date/objects3d/11/87-g_three_2.glb": "#294a1b",
+  "date/objects3d/12/mod/g_three_3.glb": "#355a21",
+  "date/objects3d/13/mod/g_three_1.glb": "#254518",
+  "date/objects3d/19/90-g_three_palms.glb": "#3b5c25",
 };
 
 type PlacementNode = [
@@ -144,12 +164,21 @@ function VillaInstances({
   model,
   type,
   visible,
+  unitStatuses,
+  showAvailable,
+  showAllocated,
 }: {
   placement: string;
   model: string;
   type: string;
   visible: boolean;
+  unitStatuses: Record<string, UnitStatus>;
+  showAvailable: boolean;
+  showAllocated: boolean;
 }) {
+  const maxAnisotropy = useThree((state) =>
+    state.gl.capabilities.getMaxAnisotropy(),
+  );
   const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(model)}`);
   const rawPlacement = useLoader(
     THREE.FileLoader,
@@ -172,21 +201,23 @@ function VillaInstances({
     texture.flipY = false;
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(1, 1);
+    texture.anisotropy = Math.min(16, maxAnisotropy);
     texture.needsUpdate = true;
 
     const buildingMaterial = new THREE.MeshPhongMaterial({
       map: texture,
       color: "#ffffff",
-      emissive: new THREE.Color("#242424"),
-      specular: new THREE.Color(type === "B" ? "#050505" : "#111111"),
-      shininess: type === "B" ? 77.51 : 30,
+      emissive: new THREE.Color("#17120e"),
+      emissiveIntensity: 0.1,
+      specular: new THREE.Color("#080706"),
+      shininess: 10,
       side: THREE.DoubleSide,
     });
     const glassMaterial = new THREE.MeshPhongMaterial({
-      color: "#636363",
+      color: "#858585",
       specular: new THREE.Color("#080808"),
       shininess: 30,
-      opacity: 0.73,
+      opacity: 0.68,
       transparent: true,
       depthWrite: true,
       side: THREE.FrontSide,
@@ -195,6 +226,11 @@ function VillaInstances({
     return nodes.map((node) => {
       const object = gltf.scene.clone(true);
       object.name = node[0];
+      const unitId = object.name.match(/_(\d+)$/)?.[1] ?? "";
+      const status = unitStatuses[unitId] ?? "allocated";
+      const statusColor =
+        status === "available" ? AVAILABLE_COLOR : ALLOCATED_COLOR;
+      object.userData.unitStatus = status;
       object.position.set(node[1] * 0.01, node[2] * 0.01, node[3] * 0.01);
       object.rotation.set(
         THREE.MathUtils.degToRad(node[4]),
@@ -210,6 +246,11 @@ function VillaInstances({
           // only the unit beneath the pointer.
           child.material = (isGlass ? glassMaterial : buildingMaterial).clone();
           const material = child.material as THREE.MeshPhongMaterial;
+          // Keep the façade texture bright and readable. Status is expressed
+          // as a restrained tint instead of multiplying the texture by the
+          // full dark allocation colour.
+          material.color.set("#ffffff").lerp(new THREE.Color(statusColor), 0.045);
+          material.userData.statusColor = statusColor;
           material.userData.baseEmissive = material.emissive.getHex();
           material.userData.baseEmissiveIntensity = material.emissiveIntensity;
           child.castShadow = !isGlass;
@@ -219,7 +260,7 @@ function VillaInstances({
       });
       return object;
     });
-  }, [gltf.scene, rawPlacement, texture, type]);
+  }, [gltf.scene, maxAnisotropy, rawPlacement, texture, type, unitStatuses]);
 
   useEffect(() => {
     instances.forEach((villa) =>
@@ -231,7 +272,11 @@ function VillaInstances({
         materials.forEach((rawMaterial) => {
           const material = rawMaterial as THREE.MeshPhongMaterial;
           if (!material.emissive) return;
-          const active = villa.name === hoveredVilla;
+          const status = villa.userData.unitStatus as UnitStatus;
+          const filteredByStatus =
+            status === "available" ? !showAvailable : !showAllocated;
+          const active =
+            villa.name === hoveredVilla || !visible || filteredByStatus;
           material.emissive.setHex(
             active ? 0x10b39b : (material.userData.baseEmissive ?? 0x000000),
           );
@@ -242,7 +287,7 @@ function VillaInstances({
         });
       }),
     );
-  }, [hoveredVilla, instances]);
+  }, [hoveredVilla, instances, showAllocated, showAvailable, visible]);
 
   const openUnit = (event: ThreeEvent<MouseEvent>, objectName: string) => {
     event.stopPropagation();
@@ -254,7 +299,7 @@ function VillaInstances({
   };
 
   return (
-    <group visible={visible}>
+    <group>
       {instances.map((object) => (
         <primitive
           key={object.name}
@@ -291,6 +336,9 @@ function ModelScene({
   textures: TextureMap;
   loadedTextures: THREE.Texture[];
 }) {
+  const maxAnisotropy = useThree((state) =>
+    state.gl.capabilities.getMaxAnisotropy(),
+  );
   const gltf = useGLTF(`${ASSET_ROOT}${encodeURI(path)}`);
   const entries = useMemo(() => Object.entries(textures), [textures]);
   const scene = useMemo(() => {
@@ -308,6 +356,7 @@ function ModelScene({
         texture.flipY = false;
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         if (spec.repeat) texture.repeat.set(...spec.repeat);
+        texture.anisotropy = Math.min(16, maxAnisotropy);
         texture.needsUpdate = true;
         return [name, { texture, spec }] as const;
       }),
@@ -326,8 +375,9 @@ function ModelScene({
             map,
             color: spec.color ?? "#ffffff",
             emissive: new THREE.Color(spec.emissive ?? "#000000"),
+            emissiveIntensity: spec.emissive ? 0.72 : 1,
             specular: new THREE.Color(spec.specular ?? "#111111"),
-            shininess: spec.shininess ?? 30,
+            shininess: Math.min(spec.shininess ?? 20, 32),
             side: previous?.side ?? THREE.FrontSide,
           });
         } else if (/tree|palm/i.test(object.name)) {
@@ -344,7 +394,7 @@ function ModelScene({
       }
     });
     return clone;
-  }, [entries, gltf.scene, loadedTextures]);
+  }, [entries, gltf.scene, loadedTextures, maxAnisotropy, path]);
   return <primitive object={scene} visible={visible} />;
 }
 
@@ -425,22 +475,36 @@ function CameraRig({
 function Masterplan({
   activeTypes,
   controls,
+  unitStatuses,
+  showAvailable,
+  showAllocated,
 }: {
   activeTypes: Set<string>;
   controls: React.RefObject<OrbitControlsImpl | null>;
+  unitStatuses: Record<string, UnitStatus>;
+  showAvailable: boolean;
+  showAllocated: boolean;
 }) {
   return (
     <>
-      <color attach="background" args={["#cbb486"]} />
+      <color attach="background" args={["#ffffff"]} />
       <fog attach="fog" args={["#ffffff", 820, 2800]} />
-      <ambientLight intensity={1.15} color="#ffffff" />
+      <ambientLight intensity={0.82} color="#fffaf2" />
+      <hemisphereLight args={["#fffdf8", "#c8ae7f", 0.12]} />
       <directionalLight
         castShadow
-        intensity={0.65}
-        color="#ffffff"
-        position={[450, 900, -700]}
+        intensity={1.55}
+        color="#fff7e9"
+        position={[-650, 950, 850]}
         shadow-mapSize={[4096, 4096]}
-        shadow-bias={0.001}
+        shadow-camera-left={-750}
+        shadow-camera-right={750}
+        shadow-camera-top={750}
+        shadow-camera-bottom={-750}
+        shadow-camera-near={100}
+        shadow-camera-far={2200}
+        shadow-bias={-0.00025}
+        shadow-normalBias={0.035}
         shadow-radius={1}
       />
       <group scale={0.82}>
@@ -456,6 +520,9 @@ function Masterplan({
               model={model}
               type={type}
               visible={activeTypes.has(type)}
+              unitStatuses={unitStatuses}
+              showAvailable={showAvailable}
+              showAllocated={showAllocated}
             />
           </Suspense>
         ))}
@@ -472,7 +539,43 @@ function MasterplanApp() {
   );
   const [filterOpen, setFilterOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [available, setAvailable] = useState(true);
+  const [allocated, setAllocated] = useState(true);
+  const [budget, setBudget] = useState(320);
+  const [units, setUnits] = useState<UnitRecord[]>([]);
   const controls = useRef<OrbitControlsImpl>(null);
+
+  useEffect(() => {
+    fetch(`${ASSET_ROOT}units.json`)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`Unable to load units (${response.status})`);
+        return response.json() as Promise<UnitRecord[]>;
+      })
+      .then(setUnits);
+  }, []);
+
+  const unitStatuses = useMemo(
+    () =>
+      Object.fromEntries(
+        units.map((unit) => [unit.id, getUnitStatus(unit.availability)]),
+      ) as Record<string, UnitStatus>,
+    [units],
+  );
+  const availableCount = units.filter(
+    (unit) => getUnitStatus(unit.availability) === "available",
+  ).length;
+  const allocatedCount = units.length - availableCount;
+  const typeCounts = useMemo(
+    () =>
+      Object.fromEntries(
+        ["A", "B", "C"].map((type) => [
+          type,
+          units.filter((unit) => unit.model.trim().startsWith(type)).length,
+        ]),
+      ) as Record<string, number>,
+    [units],
+  );
 
   const toggleType = (type: string) =>
     setActiveTypes((current) => {
@@ -488,14 +591,13 @@ function MasterplanApp() {
     camera.position.sub(target).multiplyScalar(factor).add(target);
     controls.current?.update();
   };
-
   return (
     <main className="masterplan-app" dir={language === "ar" ? "rtl" : "ltr"}>
       <div className="masterplan-canvas">
         <Canvas
-          shadows
+          shadows="soft"
           frameloop="demand"
-          dpr={[1, 1.5]}
+          dpr={[1, 2]}
           performance={{ min: 0.6 }}
           camera={{ fov: 45, near: 1, far: 10000 }}
           gl={{
@@ -506,10 +608,17 @@ function MasterplanApp() {
             toneMappingExposure: 1,
           }}
         >
-          <Masterplan activeTypes={activeTypes} controls={controls} />
+          <Masterplan
+            activeTypes={activeTypes}
+            controls={controls}
+            unitStatuses={unitStatuses}
+            showAvailable={available}
+            showAllocated={allocated}
+          />
         </Canvas>
       </div>
 
+      {/* Replaced by the forthcoming homepage UI.
       <div className="view-switch" aria-label="View mode">
         <button className="selected">Map</button>
         <span>›</span>
@@ -548,13 +657,165 @@ function MasterplanApp() {
           </div>
         )}
       </section>
+      */}
 
       <img
         className="map-logo"
-        src={`${ASSET_ROOT}date/info/96/117-Tilal_wht.svg`}
-        alt="Tilal"
+        src="/assets/logo.svg"
+        alt="Marasi"
       />
 
+      <div className="allocation-ui" aria-label="Allocation controls">
+        <aside className="allocation-left">
+          <section className="allocation-card allocation-filter-card">
+            <header>
+              <h2>Filter</h2>
+              <span>{units.length} plots</span>
+            </header>
+
+            <div className="allocation-card unit-types-card">
+              <p className="allocation-kicker">Units</p>
+              <div className="allocation-type-grid">
+                {(["A", "B", "C"] as const).map((type) => (
+                  <button
+                    key={type}
+                    className={activeTypes.has(type) ? "active" : ""}
+                    onClick={() => toggleType(type)}
+                  >
+                    <b>Type {type}</b>
+                    <span>{typeCounts[type] ?? 0}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="allocation-filter-body">
+              <p className="allocation-kicker">Status</p>
+              <label className="status-row">
+                <input
+                  type="checkbox"
+                  checked={available}
+                  onChange={(event) => setAvailable(event.target.checked)}
+                />
+                <i className="available" />
+                <span>Available</span>
+                <b>{availableCount}</b>
+              </label>
+              <label className="status-row">
+                <input
+                  type="checkbox"
+                  checked={allocated}
+                  onChange={(event) => setAllocated(event.target.checked)}
+                />
+                <i className="allocated" />
+                <span>Allocated</span>
+                <b>{allocatedCount}</b>
+              </label>
+              <div className="budget-filter">
+                <div>
+                  <span className="allocation-kicker">Budget ceiling</span>
+                  <b>up to ₦{budget}m</b>
+                </div>
+                <input
+                  type="range"
+                  min="40"
+                  max="320"
+                  step="10"
+                  value={budget}
+                  onChange={(event) => setBudget(Number(event.target.value))}
+                />
+              </div>
+            </div>
+          </section>
+        </aside>
+
+        <aside className="allocation-right">
+          <div className="allocation-menu-wrap">
+            <button
+              className="allocation-menu"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <MenuIcon />
+              Menu
+            </button>
+            {menuOpen && (
+              <nav className="allocation-menu-panel">
+                <button>Masterplan</button>
+                <button>About Tilal</button>
+                <button>Location</button>
+                <button>Contact</button>
+              </nav>
+            )}
+          </div>
+
+          <section className="allocation-card allocation-intro">
+            <p className="allocation-kicker">Start here</p>
+            <h1>Pick a plot, we will show you everything on it.</h1>
+            <p>Then the exterior, every room. Then numbers.</p>
+          </section>
+
+          <section className="allocation-card sales-card">
+            <p className="allocation-kicker">Your sales contact</p>
+            {[
+              {
+                initials: "AI",
+                name: "Ahmed Ibraheem",
+                phone: "+234 802 000 1188",
+                green: false,
+              },
+              {
+                initials: "DP",
+                name: "David Peter",
+                phone: "+234 809 442 0071",
+                green: true,
+              },
+            ].map((contact) => (
+              <article key={contact.name}>
+                <i className={contact.green ? "green" : ""}>
+                  {contact.initials}
+                </i>
+                <div>
+                  <h3>{contact.name}</h3>
+                  <small>Allocations, phase 1 &amp; 2</small>
+                  <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>
+                    {contact.phone}
+                  </a>
+                </div>
+                <a
+                  className="contact-action"
+                  href={`tel:${contact.phone.replaceAll(" ", "")}`}
+                  aria-label={`Call ${contact.name}`}
+                >
+                  <Phone />
+                </a>
+                <button
+                  className="contact-action"
+                  aria-label={`Message ${contact.name}`}
+                >
+                  <MessageCircle />
+                </button>
+              </article>
+            ))}
+            <footer>
+              <i /> Sales desk is open now · until 6pm WAT
+            </footer>
+          </section>
+        </aside>
+
+        <div className="allocation-map-tools">
+          <button onClick={() => zoom(0.82)} aria-label="Zoom in">
+            <Plus />
+          </button>
+          <button onClick={() => zoom(1.22)} aria-label="Zoom out">
+            <Minus />
+          </button>
+        </div>
+        <p className="allocation-hint">
+          Drag to rotate · Scroll to zoom · Click a plot
+        </p>
+      </div>
+
+      {/* Replaced by the forthcoming homepage UI.
       <div className="language-switch">
         <button
           className={language === "en" ? "active" : ""}
@@ -569,6 +830,8 @@ function MasterplanApp() {
           AR
         </button>
       </div>
+      */}
+      {/* Replaced by the forthcoming homepage UI.
       <div className="menu-wrap">
         <button className="main-menu" onClick={() => setMenuOpen(!menuOpen)}>
           <MenuIcon /> <span>Menu</span>
@@ -582,7 +845,9 @@ function MasterplanApp() {
           </nav>
         )}
       </div>
+      */}
 
+      {/* Replaced by the forthcoming homepage UI.
       <div className="zoom-tools">
         <button onClick={() => zoom(0.82)} aria-label="Zoom in">
           <Plus />
@@ -591,6 +856,7 @@ function MasterplanApp() {
           <Minus />
         </button>
       </div>
+      */}
       <div className="compass" aria-label="Compass">
         <i>N</i>
         <span>W</span>

@@ -203,31 +203,6 @@ function UnitScene({
   );
 }
 
-function parseUnits(csv: string): Unit[] {
-  return csv
-    .split(/\r?\n/)
-    .slice(1)
-    .filter(Boolean)
-    .map((line) => {
-      const x = line.split(",");
-      return {
-        block: x[0],
-        id: x[1],
-        model: x[2],
-        landArea: x[3],
-        buildArea: x[4],
-        bedrooms: x[5],
-        bathrooms: x[6],
-        master: x[7],
-        living: x[8],
-        kitchen: x[9],
-        guest: x[10],
-        direction: x[11],
-        availability: x[12],
-      };
-    });
-}
-
 export default function UnitDetails({ unitId }: { unitId: string }) {
   const [unit, setUnit] = useState<Unit | null>(null),
     [detailsOpen, setDetailsOpen] = useState(false),
@@ -238,9 +213,11 @@ export default function UnitDetails({ unitId }: { unitId: string }) {
     );
   const controls = useRef<OrbitControlsImpl>(null);
   useEffect(() => {
-    fetch(`${ROOT}xzLocalDoc.csv`)
-      .then((r) => r.text())
-      .then(parseUnits)
+    fetch(`${ROOT}units.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Unable to load units (${response.status})`);
+        return response.json() as Promise<Unit[]>;
+      })
       .then((units) =>
         setUnit(units.find((item) => item.id === unitId) ?? null),
       );
