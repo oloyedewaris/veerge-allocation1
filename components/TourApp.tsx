@@ -249,7 +249,9 @@ function VillaInstances({
           // Keep the façade texture bright and readable. Status is expressed
           // as a restrained tint instead of multiplying the texture by the
           // full dark allocation colour.
-          material.color.set("#ffffff").lerp(new THREE.Color(statusColor), 0.045);
+          material.color
+            .set("#ffffff")
+            .lerp(new THREE.Color(statusColor), 0.045);
           material.userData.statusColor = statusColor;
           material.userData.baseEmissive = material.emissive.getHex();
           material.userData.baseEmissiveIntensity = material.emissiveIntensity;
@@ -541,7 +543,6 @@ function MasterplanApp() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [available, setAvailable] = useState(true);
   const [allocated, setAllocated] = useState(true);
-  const [budget, setBudget] = useState(320);
   const [units, setUnits] = useState<UnitRecord[]>([]);
   const controls = useRef<OrbitControlsImpl>(null);
 
@@ -659,11 +660,7 @@ function MasterplanApp() {
       </section>
       */}
 
-      <img
-        className="map-logo"
-        src="/assets/logo.svg"
-        alt="Marasi"
-      />
+      <img className="map-logo" src="/assets/logo.svg" alt="Marasi" />
 
       <div className="allocation-ui" aria-label="Allocation controls">
         <aside className="allocation-left">
@@ -711,20 +708,6 @@ function MasterplanApp() {
                 <span>Allocated</span>
                 <b>{allocatedCount}</b>
               </label>
-              <div className="budget-filter">
-                <div>
-                  <span className="allocation-kicker">Budget ceiling</span>
-                  <b>up to ₦{budget}m</b>
-                </div>
-                <input
-                  type="range"
-                  min="40"
-                  max="320"
-                  step="10"
-                  value={budget}
-                  onChange={(event) => setBudget(Number(event.target.value))}
-                />
-              </div>
             </div>
           </section>
         </aside>
@@ -758,25 +741,20 @@ function MasterplanApp() {
             <p className="allocation-kicker">Your sales contact</p>
             {[
               {
-                initials: "AI",
+                img: "/assets/ahmed.jpg",
                 name: "Ahmed Ibraheem",
                 phone: "+234 802 000 1188",
-                green: false,
               },
               {
-                initials: "DP",
+                img: "/assets/peter.png",
                 name: "David Peter",
                 phone: "+234 809 442 0071",
-                green: true,
               },
             ].map((contact) => (
               <article key={contact.name}>
-                <i className={contact.green ? "green" : ""}>
-                  {contact.initials}
-                </i>
+                <img src={contact.img} />
                 <div>
                   <h3>{contact.name}</h3>
-                  <small>Allocations, phase 1 &amp; 2</small>
                   <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>
                     {contact.phone}
                   </a>

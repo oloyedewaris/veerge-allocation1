@@ -475,30 +475,6 @@ button {
     color: #61718a
 }
 
-.budget-filter {
-    margin-top: 14px;
-    padding: 15px 0 20px;
-    border-top: 1px solid #e2ddd4;
-    border-bottom: 1px solid #e2ddd4
-}
-
-.budget-filter>div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between
-}
-
-.budget-filter>div b {
-    font: 14px Georgia, serif
-}
-
-.budget-filter input {
-    width: 100%;
-    height: 2px;
-    margin-top: 15px;
-    accent-color: #071b35
-}
-
 .allocation-legend {
     padding: 13px 15px 14px;
     display: grid;
@@ -600,19 +576,11 @@ button {
     border-bottom: 1px solid #e2ddd4
 }
 
-.sales-card article>i {
+.sales-card article>img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #071b35;
-    color: #fff;
-    display: grid;
     place-items: center;
-    font: 14px Georgia, serif
-}
-
-.sales-card article>i.green {
-    background: #188c75
 }
 
 .sales-card h3 {
