@@ -3,12 +3,11 @@
 import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import {
-  ChevronDown,
-  Cuboid,
-  Menu as MenuIcon,
+  ArrowLeft,
+  Mail,
+  MessageCircle,
   Minus,
   Plus,
-  Rotate3D,
 } from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -205,9 +204,6 @@ function UnitScene({
 
 export default function UnitDetails({ unitId }: { unitId: string }) {
   const [unit, setUnit] = useState<Unit | null>(null),
-    [detailsOpen, setDetailsOpen] = useState(false),
-    [menuOpen, setMenuOpen] = useState(false),
-    [language, setLanguage] = useState<"en" | "ar">("en"),
     [view, setView] = useState<"exterior" | "tour">(() =>
       typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "tour" ? "tour" : "exterior",
     );
@@ -224,6 +220,9 @@ export default function UnitDetails({ unitId }: { unitId: string }) {
   }, [unitId]);
   const type = (unit?.model?.trim()[0] || "B") as ModelType,
     variant = unit?.model.match(/\(([^)]+)\)/)?.[1] ?? unit?.model ?? "Villa";
+  const status =
+    unit?.availability.trim() === "Availabel." ? "Available" : "Reserved";
+  const salesSubject = encodeURIComponent(`Myxellia villa ${unitId}`);
   const zoom = (factor: number) => {
     const c = controls.current;
     if (!c) return;
@@ -238,144 +237,113 @@ export default function UnitDetails({ unitId }: { unitId: string }) {
     window.history.replaceState(null, "", url);
   };
   return (
-    <main className="unit-app" dir={language === "ar" ? "rtl" : "ltr"}>
-      {view === "exterior" ? (
-        <div className="unit-canvas">
-          <Canvas
-            shadows
-            dpr={[1, 1.75]}
-            camera={{ fov: 45, near: 0.1, far: 200, position: [5.4, 3.5, 9] }}
-            gl={{
-              antialias: true,
-              alpha: true,
-              outputColorSpace: THREE.SRGBColorSpace,
-              toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 1.12,
-            }}
-          >
-            <UnitScene type={type} controls={controls} />
-          </Canvas>
-        </div>
-      ) : (
-        <div className="virtual-tour"><PanoramaTour type={type} /></div>
-      )}
-      <nav className="unit-breadcrumb">
-        <button onClick={() => (location.href = "/?map3d")}>Map</button>
-        <span>›</span>
-        <button onClick={() => (location.href = "/?map3d")}>Area</button>
-        <span>›</span>
-        <button className="current">Villa</button>
-      </nav>
-      <section className="unit-tools">
-        <button
-          className="unit-summary"
-          onClick={() => setDetailsOpen(!detailsOpen)}
-        >
-          <small>{unit?.direction ?? "—"}</small>
-          <strong>
-            № {unitId} <em>({variant})</em>
-          </strong>
-          <ChevronDown className={detailsOpen ? "open" : ""} />
-        </button>
-        {detailsOpen && unit && (
-          <div className="unit-info">
-            <div>
-              <span>Type</span>
-              <b>{type}</b>
-            </div>
-            <div>
-              <span>Status</span>
-              <b>{unit.availability}</b>
-            </div>
-            <div>
-              <span>Land area</span>
-              <b>{unit.landArea} m²</b>
-            </div>
-            <div>
-              <span>Built-up area</span>
-              <b>{unit.buildArea} m²</b>
-            </div>
-            <div>
-              <span>Bedrooms</span>
-              <b>{unit.bedrooms}</b>
-            </div>
-            <div>
-              <span>Bathrooms</span>
-              <b>{unit.bathrooms}</b>
-            </div>
+    <main className="unit-detail-page">
+      <aside className="unit-detail-sidebar">
+        <header className="unit-detail-brandbar">
+          <button onClick={() => (window.location.href = "/?map3d")} aria-label="Back to masterplan">
+            <ArrowLeft />
+          </button>
+        </header>
+
+        <section className="unit-detail-summary">
+          <div className="unit-detail-heading">
+            <small>Tilal Al Ghaf · Narjis</small>
+            <h1>{unitId}</h1>
+            <p>Type {type} · {variant}</p>
           </div>
-        )}
-        <div className="unit-actions">
-          <button
-            className={view === "exterior" ? "active" : ""}
-            onClick={() => setViewMode("exterior")}
-          >
-            <Cuboid />
-            3D Exterior
-          </button>
-          <button
-            className={view === "tour" ? "active" : ""}
-            onClick={() => setViewMode("tour")}
-          >
-            <Rotate3D />
-            Virtual Tour
-          </button>
-        </div>
-      </section>
-      <img
-        className="map-logo"
-        src={`${ROOT}date/info/96/117-Tilal_wht.svg`}
-        alt="Tilal"
-      />
-      <div className="language-switch">
-        <button
-          className={language === "en" ? "active" : ""}
-          onClick={() => setLanguage("en")}
-        >
-          EN
-        </button>
-        <button
-          className={language === "ar" ? "active" : ""}
-          onClick={() => setLanguage("ar")}
-        >
-          AR
-        </button>
-      </div>
-      <div className="menu-wrap">
-        <button className="main-menu" onClick={() => setMenuOpen(!menuOpen)}>
-          <MenuIcon />
-          <span>Menu</span>
-        </button>
-        {menuOpen && (
-          <nav className="menu-panel">
-            <button onClick={() => (location.href = "/?map3d")}>
-              Masterplan
-            </button>
-            <button>About Tilal</button>
-            <button>Location</button>
-            <button>Contact</button>
+
+          <dl className="unit-detail-facts">
+            <div><dt>Block</dt><dd>{unit?.block ?? "—"}</dd></div>
+            <div><dt>Direction</dt><dd>{unit?.direction ?? "—"}</dd></div>
+            <div><dt>Bedrooms</dt><dd>{unit?.bedrooms ?? "—"}</dd></div>
+            <div><dt>Bathrooms</dt><dd>{unit?.bathrooms ?? "—"}</dd></div>
+            <div><dt>Land area</dt><dd>{unit ? unit.landArea + " m²" : "—"}</dd></div>
+            <div><dt>Status</dt><dd className={status === "Available" ? "status-available" : "status-reserved"}>{status}</dd></div>
+          </dl>
+
+          <div className="unit-detail-price">
+            <span>Built-up area</span>
+            <strong>{unit ? unit.buildArea + " m²" : "—"}</strong>
+          </div>
+
+          <dl className="unit-detail-extras">
+            <div><dt>Master bedroom</dt><dd>{unit ? unit.master + " m²" : "—"}</dd></div>
+            <div><dt>Living room</dt><dd>{unit ? unit.living + " m²" : "—"}</dd></div>
+            <div><dt>Kitchen</dt><dd>{unit ? unit.kitchen + " m²" : "—"}</dd></div>
+            <div><dt>Guest room</dt><dd>{unit ? unit.guest + " m²" : "—"}</dd></div>
+          </dl>
+
+          <nav className="unit-detail-resource-links" aria-label="Unit views">
+            <button onClick={() => setViewMode("exterior")}>◇ View 3D exterior</button>
+            <button onClick={() => setViewMode("tour")}>◈ Explore virtual tour</button>
           </nav>
+        </section>
+      </aside>
+
+      <section className="unit-detail-viewer" id="unit-stage">
+        <nav className="unit-view-tabs" aria-label="Unit view">
+          <button className={view === "exterior" ? "selected" : ""} onClick={() => setViewMode("exterior")}>3D Exterior</button>
+          <button className={view === "tour" ? "selected" : ""} onClick={() => setViewMode("tour")}>Virtual Tour</button>
+        </nav>
+
+        {view === "exterior" ? (
+          <div className="unit-canvas">
+            <Canvas
+              shadows
+              dpr={[1, 1.75]}
+              camera={{ fov: 45, near: 0.1, far: 200, position: [5.4, 3.5, 9] }}
+              gl={{
+                antialias: true,
+                alpha: true,
+                outputColorSpace: THREE.SRGBColorSpace,
+                toneMapping: THREE.ACESFilmicToneMapping,
+                toneMappingExposure: 1.12,
+              }}
+            >
+              <UnitScene type={type} controls={controls} />
+            </Canvas>
+            <div className="unit-view-zoom">
+              <button onClick={() => zoom(0.82)} aria-label="Zoom in"><Plus /></button>
+              <button onClick={() => zoom(1.22)} aria-label="Zoom out"><Minus /></button>
+            </div>
+          </div>
+        ) : (
+          <div className="virtual-tour"><PanoramaTour type={type} /></div>
         )}
-      </div>
-      {view === "exterior" && (
-        <>
-          <div className="zoom-tools">
-            <button onClick={() => zoom(0.82)} aria-label="Zoom in">
-              <Plus />
-            </button>
-            <button onClick={() => zoom(1.22)} aria-label="Zoom out">
-              <Minus />
-            </button>
-          </div>
-          <div className="compass">
-            <i>N</i>
-            <span>W</span>
-            <b>▲</b>
-            <span>E</span>
-            <i>S</i>
-          </div>
-        </>
-      )}
+      </section>
+
+      <aside className="unit-sales-panel">
+        <section className="unit-reservation-block">
+          <small>Your new home</small>
+          <h2>Reserve villa {unitId}<br />in your name</h2>
+          <p>Tell us a few things about yourself, review the unit details and payment options, and decide from there.</p>
+          <a className="unit-primary-button" href={"mailto:sales@myxellia.io?subject=" + salesSubject}>
+            Reserve this unit <span aria-hidden="true">→</span>
+          </a>
+        </section>
+
+        <section className="unit-sales-contact">
+          <small>Your sales contact</small>
+          {[
+            { name: "Ahmed Ibraheem", role: "Customer Relations Manager", email: "ahmed@myxellia.io", phone: "2348020001188", image: "/assets/ahmed.jpg" },
+            { name: "David Peter", role: "Sales Manager", email: "david@myxellia.io", phone: "2348094420071", image: "/assets/peter.png" },
+          ].map((contact) => (
+            <article className="unit-contact-card" key={contact.name}>
+              <img src={contact.image} alt="" />
+              <div>
+                <h3>{contact.name}</h3>
+                <p>{contact.role}</p>
+                <a href={"mailto:" + contact.email + "?subject=" + salesSubject}>{contact.email}</a>
+              </div>
+              <nav>
+                <a href={"https://wa.me/" + contact.phone + "?text=I%20am%20interested%20in%20villa%20" + unitId} aria-label={"Message " + contact.name}><MessageCircle /></a>
+                <a href={"mailto:" + contact.email + "?subject=" + salesSubject} aria-label={"Email " + contact.name}><Mail /></a>
+              </nav>
+            </article>
+          ))}
+          <a className="unit-share-link" href={"mailto:?subject=" + salesSubject + "&body=Take%20a%20look%20at%20villa%20" + unitId}>Send to a friend</a>
+        </section>
+      </aside>
     </main>
   );
 }
