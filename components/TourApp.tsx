@@ -459,7 +459,7 @@ function CameraRig({
 }) {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(-270, 195, 0);
+    camera.position.set(-520, 375, 0);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return (
