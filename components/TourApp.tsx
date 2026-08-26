@@ -488,7 +488,7 @@ function Masterplan({
       <color attach="background" args={["#ffffff"]} />
       <fog attach="fog" args={["#ffffff", 820, 2800]} />
       <ambientLight intensity={1.85} color="#ffffff" />
-      {/* <hemisphereLight args={["#ffffff", "#e0dcd4", 0.75]} /> */}
+
       <directionalLight
         castShadow
         intensity={1.6}
