@@ -106,7 +106,7 @@ const siteTextures: Record<string, TextureMap> = {
   },
   "date/objects3d/36/206-g_Building 2 Scaled.glb": {
     g_Hospital_Web_object: {
-      path: "date/textures/15/83-icon.png",
+      path: "date/textures/15/79-GenPlan_Hospital_Web_Color.jpg",
       emissive: "#242424",
     },
     g_Mall_Web_object: {
@@ -114,11 +114,11 @@ const siteTextures: Record<string, TextureMap> = {
       emissive: "#242424",
     },
     g_GenPlan_Building_2_2_Web_object: {
-      path: "date/textures/18/89-icon.png",
+      path: "date/textures/18/91-GenPlan_Building_2_2_Web_Color.jpg",
       specular: "#242424",
     },
     g_GenPlan_Building_2_1_Web_object: {
-      path: "date/textures/17/87-icon.png",
+      path: "date/textures/17/92-GenPlan_Building_2_1_Web_Color.jpg",
       emissive: "#242424",
     },
     Mosque_Web002: { path: "date/textures/23/121-Mosque_Web_Color.jpg" },
@@ -200,6 +200,7 @@ function VillaInstances({
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.flipY = false;
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
     texture.repeat.set(1, 1);
     texture.anisotropy = Math.min(16, maxAnisotropy);
     texture.needsUpdate = true;
@@ -211,7 +212,7 @@ function VillaInstances({
       emissiveIntensity: 0.1,
       specular: new THREE.Color("#080706"),
       shininess: 10,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
     });
     const glassMaterial = new THREE.MeshPhongMaterial({
       color: "#858585",
@@ -219,7 +220,7 @@ function VillaInstances({
       shininess: 30,
       opacity: 0.68,
       transparent: true,
-      depthWrite: true,
+      depthWrite: false,
       side: THREE.FrontSide,
     });
 
@@ -230,16 +231,22 @@ function VillaInstances({
       const status = unitStatuses[unitId] ?? "allocated";
       object.userData.unitStatus = status;
       object.position.set(node[1] * 0.01, node[2] * 0.01, node[3] * 0.01);
+
+      // Type A models have an internal -90 deg rotation on their sub-meshes in the GLB.
+      // Compensate so all villa types have consistent front-facing orientations.
+      const rotYOffset = type === "A" ? 90 : 180;
       object.rotation.set(
         THREE.MathUtils.degToRad(node[4]),
-        THREE.MathUtils.degToRad(node[5]),
+        THREE.MathUtils.degToRad(node[5] + rotYOffset),
         THREE.MathUtils.degToRad(node[6]),
       );
       object.scale.set(node[7], node[8], node[9]);
-      let meshIndex = 0;
+
       object.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          const isGlass = type === "C" ? meshIndex === 1 : meshIndex === 0;
+          const isGlass =
+            /glass|object003|object011|object012/i.test(child.name) ||
+            (child.geometry?.attributes?.position?.count ?? 0) < 600;
           // Materials must be unique per villa so the hover treatment affects
           // only the unit beneath the pointer.
           child.material = (isGlass ? glassMaterial : buildingMaterial).clone();
@@ -251,7 +258,6 @@ function VillaInstances({
           material.userData.baseEmissiveIntensity = material.emissiveIntensity;
           child.castShadow = !isGlass;
           child.receiveShadow = true;
-          meshIndex += 1;
         }
       });
       return object;
@@ -452,7 +458,7 @@ function CameraRig({
       ref={controls}
       makeDefault
       target={[0, 0, 0]}
-      minDistance={260}
+      // minDistance={260}
       maxDistance={2400}
       minPolarAngle={0.16}
       maxPolarAngle={1.38}
@@ -628,8 +634,10 @@ function MasterplanApp() {
           frameloop="demand"
           dpr={[1, 2]}
           performance={{ min: 0.6 }}
+
           camera={{ fov: 45, near: 1, far: 10000 }}
           gl={{
+            // logarithmicDepthBuffer: true,
             antialias: true,
             powerPreference: "high-performance",
             outputColorSpace: THREE.SRGBColorSpace,
