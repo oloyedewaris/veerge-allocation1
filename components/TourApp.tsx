@@ -17,9 +17,6 @@ import * as THREE from "three";
 import UnitDetails from "./UnitDetails";
 
 const ASSET_ROOT = "/reference-assets/";
-const AVAILABLE_COLOR = "#1B7F63";
-const ALLOCATED_COLOR = "#9AA6B4";
-
 type UnitRecord = { id: string; model: string; availability: string };
 type UnitStatus = "available" | "allocated";
 
@@ -137,6 +134,9 @@ const villaTextures: Record<string, TextureMap> = {
   C: { "*": { path: "date/textures/1/4-icon.png" } },
 };
 
+// The masterplan vegetation GLBs are also geometry-only, so their original
+// external solid colours still have to be restored by the loader. Unlike the
+// previous treatment, their source transforms are left untouched.
 const foliageColors: Record<string, string> = {
   "date/objects3d/10/86-g_three_1.glb": "#52683d",
   "date/objects3d/11/87-g_three_2.glb": "#485f35",
@@ -229,8 +229,6 @@ function VillaInstances({
       object.name = node[0];
       const unitId = object.name.match(/_(\d+)$/)?.[1] ?? "";
       const status = unitStatuses[unitId] ?? "allocated";
-      const statusColor =
-        status === "available" ? AVAILABLE_COLOR : ALLOCATED_COLOR;
       object.userData.unitStatus = status;
       object.position.set(node[1] * 0.01, node[2] * 0.01, node[3] * 0.01);
 
@@ -253,13 +251,9 @@ function VillaInstances({
           // only the unit beneath the pointer.
           child.material = (isGlass ? glassMaterial : buildingMaterial).clone();
           const material = child.material as THREE.MeshPhongMaterial;
-          // Keep the façade texture bright and readable. Status is expressed
-          // as a restrained tint instead of multiplying the texture by the
-          // full dark allocation colour.
-          material.color
-            .set("#ffffff")
-            .lerp(new THREE.Color(statusColor), 0.045);
-          material.userData.statusColor = statusColor;
+          // Preserve the downloaded atlas exactly. Availability and hover are
+          // interaction states and must not permanently grade the façade.
+          material.color.set("#ffffff");
           material.userData.baseEmissive = material.emissive.getHex();
           material.userData.baseEmissiveIntensity = material.emissiveIntensity;
           child.castShadow = !isGlass;
@@ -389,20 +383,11 @@ function ModelScene({
             side: previous?.side ?? THREE.FrontSide,
           });
         } else if (/tree|palm/i.test(object.name)) {
-          object.scale.set(
-            object.scale.x * 0.72,
-            object.scale.y * 0.88,
-            object.scale.z * 0.72,
-          );
           const material = Array.isArray(object.material)
             ? object.material[0]
             : object.material;
           object.material = material.clone();
           object.material.color.set(foliageColors[path] ?? "#46642d");
-          if ("emissive" in object.material) {
-            object.material.emissive.set("#000000");
-            object.material.emissiveIntensity = 1;
-          }
         }
       }
     });
@@ -465,7 +450,7 @@ function CameraRig({
 }) {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(-270, 195, 0);
+    camera.position.set(-520, 375, 0);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return (
@@ -502,13 +487,12 @@ function Masterplan({
     <>
       <color attach="background" args={["#ffffff"]} />
       <fog attach="fog" args={["#ffffff", 820, 2800]} />
-      <ambientLight intensity={1.7} color="#ffffff" />
-      <hemisphereLight args={["#ffffff", "#e8d9bb", 0.38]} />
+      <ambientLight intensity={1.15} color="#ffffff" />
       <directionalLight
         castShadow
-        intensity={1.55}
-        color="#fff7e9"
-        position={[-650, 950, 850]}
+        intensity={0.65}
+        color="#ffffff"
+        position={[450, 900, -700]}
         shadow-mapSize={[4096, 4096]}
         shadow-camera-left={-750}
         shadow-camera-right={750}

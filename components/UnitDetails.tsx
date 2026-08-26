@@ -195,6 +195,9 @@ function UnitScene({
         target={[0, 0.45, 0]}
         minDistance={5}
         maxDistance={22}
+        minPolarAngle={0.12}
+        maxPolarAngle={Math.PI / 2 - 0.04}
+        enablePan={false}
         enableDamping
         dampingFactor={0.07}
       />

@@ -3,7 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { ChevronRight, Grid2X2, Map } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 type Hotspot = {
@@ -43,11 +43,13 @@ function PanoramaScene({
   scene,
   view,
   onMove,
+  onReady,
 }: {
   base: string;
   scene: TourScene;
   view: React.RefObject<View>;
   onMove: (hotspot: Hotspot) => void;
+  onReady: (sceneId: string) => void;
 }) {
   const { camera } = useThree();
   const [cubeTexture, setCubeTexture] = useState<THREE.CubeTexture | null>(
@@ -59,14 +61,17 @@ function PanoramaScene({
       FACE_ORDER.map((face) => `${base}/scenes/${scene.id}/${face}.jpg`),
       (loaded) => {
         loaded.colorSpace = THREE.SRGBColorSpace;
-        if (active) setCubeTexture(loaded);
+        if (active) {
+          setCubeTexture(loaded);
+          onReady(scene.id);
+        }
       },
     );
     return () => {
       active = false;
       texture.dispose();
     };
-  }, [base, scene.id]);
+  }, [base, onReady, scene.id]);
   useFrame(() => {
     camera.rotation.order = "YXZ";
     camera.rotation.y = THREE.MathUtils.degToRad(view.current.yaw);
@@ -98,6 +103,9 @@ function PanoramaScene({
         >
           <button
             className="pano-hotspot"
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerMove={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
             onClick={(event) => {
               event.stopPropagation();
               onMove(hotspot);
@@ -120,7 +128,9 @@ export default function PanoramaTour({ type }: { type: "A" | "B" | "C" }) {
     [mapOpen, setMapOpen] = useState(true),
     [transition, setTransition] = useState(false);
   const view = useRef<View>({ yaw: 0, pitch: 0, fov: 90 }),
-    drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+    drag = useRef<{ x: number; y: number; moved: boolean } | null>(null),
+    moveTimer = useRef<ReturnType<typeof setTimeout> | null>(null),
+    pendingLookAt = useRef<number | undefined>(undefined);
   useEffect(() => {
     fetch(`${base}/manifest.json`)
       .then((response) => response.json())
@@ -138,20 +148,29 @@ export default function PanoramaTour({ type }: { type: "A" | "B" | "C" }) {
   useEffect(() => {
     if (scene) {
       view.current = {
-        yaw: scene.hlookat,
+        yaw: pendingLookAt.current ?? scene.hlookat,
         pitch: scene.vlookat,
         fov: scene.fov,
       };
+      pendingLookAt.current = undefined;
     }
   }, [scene]);
   const move = (target: string, lookAt?: number) => {
+    if (!manifest?.scenes.some((item) => item.id === target)) return;
+    if (target === sceneId || transition) return;
     setTransition(true);
-    setTimeout(() => {
+    pendingLookAt.current = lookAt;
+    if (moveTimer.current) clearTimeout(moveTimer.current);
+    moveTimer.current = setTimeout(() => {
       setSceneId(target);
-      if (lookAt !== undefined) view.current.yaw = lookAt;
-      setTimeout(() => setTransition(false), 180);
     }, 180);
   };
+  useEffect(
+    () => () => {
+      if (moveTimer.current) clearTimeout(moveTimer.current);
+    },
+    [],
+  );
   const pointerDown = (event: React.PointerEvent) => {
     drag.current = { x: event.clientX, y: event.clientY, moved: false };
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -179,6 +198,13 @@ export default function PanoramaTour({ type }: { type: "A" | "B" | "C" }) {
       140,
     );
   };
+  const handleSceneReady = useCallback(
+    (loadedSceneId: string) => {
+      if (loadedSceneId !== sceneId) return;
+      requestAnimationFrame(() => setTransition(false));
+    },
+    [sceneId],
+  );
   if (!manifest || !scene)
     return (
       <div className="pano-loading">
@@ -210,6 +236,7 @@ export default function PanoramaTour({ type }: { type: "A" | "B" | "C" }) {
           scene={scene}
           view={view}
           onMove={(hotspot) => move(hotspot.target, hotspot.lookAt)}
+          onReady={handleSceneReady}
         />
       </Canvas>
       <div className={`pano-fade ${transition ? "active" : ""}`} />
