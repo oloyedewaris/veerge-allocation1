@@ -458,8 +458,8 @@ function CameraRig({
       ref={controls}
       makeDefault
       target={[0, 0, 0]}
-      // minDistance={260}
-      maxDistance={2400}
+      minDistance={100}
+      maxDistance={500}
       minPolarAngle={0.16}
       maxPolarAngle={1.38}
       enablePan
@@ -487,10 +487,11 @@ function Masterplan({
     <>
       <color attach="background" args={["#ffffff"]} />
       <fog attach="fog" args={["#ffffff", 820, 2800]} />
-      <ambientLight intensity={1.15} color="#ffffff" />
+      <ambientLight intensity={1.85} color="#ffffff" />
+      {/* <hemisphereLight args={["#ffffff", "#e0dcd4", 0.75]} /> */}
       <directionalLight
         castShadow
-        intensity={0.65}
+        intensity={1.6}
         color="#ffffff"
         position={[450, 900, -700]}
         shadow-mapSize={[4096, 4096]}
