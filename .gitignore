@@ -1,6 +1,9 @@
 node_modules/
 .next/
 out/
+temp_auto_push.bat
 .env*
 *.log
 
+.gitignore
+branch_structure.json
