@@ -126,6 +126,22 @@ const siteTextures: Record<string, TextureMap> = {
   "date/objects3d/5/mod/g_Building_.glb": {
     "*": { path: "date/textures/4/11-icon.png", emissive: "#161616" },
   },
+  "date/objects3d/19/90-g_three_palms.glb": {
+    trunk: { path: "map_foilage/palm_bark.jpg", repeat: [1, 5] },
+    frond: { path: "map_foilage/palmTree.png" },
+  },
+  "date/objects3d/10/86-g_three_1.glb": {
+    "*": { path: "map_foilage/tree_foilage.png" },
+  },
+  "date/objects3d/11/87-g_three_2.glb": {
+    "*": { path: "map_foilage/tree_foilage.png" },
+  },
+  "date/objects3d/12/mod/g_three_3.glb": {
+    Tree: { path: "map_foilage/tree_foilage.png" },
+  },
+  "date/objects3d/13/mod/g_three_1.glb": {
+    "*": { path: "map_foilage/tree_foilage.png" },
+  },
 };
 
 const villaTextures: Record<string, TextureMap> = {
@@ -367,8 +383,63 @@ function ModelScene({
       if (object instanceof THREE.Mesh) {
         object.castShadow = true;
         object.receiveShadow = true;
-        const mapped = textureByMesh.get(object.name) ?? textureByMesh.get("*");
-        if (mapped) {
+        const isFoliage =
+          /tree|palm/i.test(object.name) || /three|palm/i.test(path);
+
+        let mapped = textureByMesh.get(object.name);
+        if (!mapped) {
+          for (const [key, value] of textureByMesh.entries()) {
+            if (
+              key !== "*" &&
+              object.name.toLowerCase().startsWith(key.toLowerCase())
+            ) {
+              mapped = value;
+              break;
+            }
+          }
+        }
+        if (!mapped) mapped = textureByMesh.get("*");
+
+        const isPalm = /palm/i.test(object.name) || /palm/i.test(path);
+
+        if (isPalm && object.geometry?.index) {
+          const indexCount = object.geometry.index.count;
+          object.geometry = object.geometry.clone();
+          object.geometry.clearGroups();
+          object.geometry.addGroup(0, 210, 0);
+          object.geometry.addGroup(210, indexCount - 210, 1);
+
+          const trunkMapped = textureByMesh.get("trunk");
+          const frondMapped =
+            textureByMesh.get("frond") ??
+            textureByMesh.get(object.name) ??
+            textureByMesh.get("*") ??
+            mapped;
+
+          const trunkMaterial = new THREE.MeshPhongMaterial({
+            map: trunkMapped?.texture,
+            color: trunkMapped ? "#c8b49e" : "#6e523b",
+            emissive: new THREE.Color("#140f09"),
+            emissiveIntensity: 0.1,
+            specular: new THREE.Color("#181410"),
+            shininess: 10,
+            side: THREE.FrontSide,
+          });
+
+          const frondMaterial = new THREE.MeshPhongMaterial({
+            map: frondMapped?.texture,
+            color: "#ffffff",
+            emissive: new THREE.Color("#000000"),
+            specular: new THREE.Color("#223311"),
+            shininess: 15,
+            side: THREE.DoubleSide,
+            transparent: true,
+            alphaTest: 0.4,
+            depthWrite: true,
+          });
+
+          object.material = [trunkMaterial, frondMaterial];
+        } else if (mapped) {
           const { texture: map, spec } = mapped;
           const previous = Array.isArray(object.material)
             ? object.material[0]
@@ -378,16 +449,24 @@ function ModelScene({
             color: spec.color ?? "#ffffff",
             emissive: new THREE.Color(spec.emissive ?? "#000000"),
             emissiveIntensity: spec.emissive ? 0.72 : 1,
-            specular: new THREE.Color(spec.specular ?? "#111111"),
-            shininess: Math.min(spec.shininess ?? 20, 32),
-            side: previous?.side ?? THREE.FrontSide,
+            specular: new THREE.Color(
+              spec.specular ?? (isFoliage ? "#223311" : "#111111"),
+            ),
+            shininess: isFoliage ? 15 : Math.min(spec.shininess ?? 20, 32),
+            side: isFoliage
+              ? THREE.DoubleSide
+              : (previous?.side ?? THREE.FrontSide),
+            transparent: isFoliage,
+            alphaTest: isFoliage ? 0.4 : 0,
+            depthWrite: true,
           });
-        } else if (/tree|palm/i.test(object.name)) {
+        } else if (isFoliage) {
           const material = Array.isArray(object.material)
             ? object.material[0]
             : object.material;
           object.material = material.clone();
           object.material.color.set(foliageColors[path] ?? "#46642d");
+          object.material.side = THREE.DoubleSide;
         }
       }
     });
@@ -458,7 +537,7 @@ function CameraRig({
       ref={controls}
       makeDefault
       target={[0, 0, 0]}
-      minDistance={100}
+      minDistance={150}
       maxDistance={500}
       minPolarAngle={0.16}
       maxPolarAngle={1.38}
