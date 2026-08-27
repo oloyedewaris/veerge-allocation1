@@ -11,14 +11,14 @@ import {
 } from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import dynamic from "next/dynamic";
 import * as THREE from "three";
 
 const ROOT = "/reference-assets/";
-const PanoramaTour = dynamic(() => import("./PanoramaTour"), {
-  ssr: false,
-  loading: () => <div className="pano-loading"><i /><span>Loading interior tour…</span></div>,
-});
+const VIRTUAL_TOUR_URLS = {
+  A: "https://3dtour.ua/files/tilal/narjis/3dtour/typea/",
+  B: "https://3dtour.ua/files/tilal/narjis/3dtour/typeb/",
+  C: "https://3dtour.ua/files/tilal/narjis/3dtour/typec/",
+} as const;
 type Unit = {
   block: string;
   id: string;
@@ -311,7 +311,14 @@ export default function UnitDetails({ unitId }: { unitId: string }) {
             </div>
           </div>
         ) : (
-          <div className="virtual-tour"><PanoramaTour type={type} /></div>
+          <div className="virtual-tour">
+            <iframe
+              src={VIRTUAL_TOUR_URLS[type]}
+              title={`Type ${type} virtual tour`}
+              allow="fullscreen"
+              allowFullScreen
+            />
+          </div>
         )}
       </section>
 
