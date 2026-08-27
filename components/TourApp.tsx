@@ -537,7 +537,7 @@ function CameraRig({
       ref={controls}
       makeDefault
       target={[0, 0, 0]}
-      minDistance={150}
+      minDistance={120}
       maxDistance={500}
       minPolarAngle={0.16}
       maxPolarAngle={1.38}
