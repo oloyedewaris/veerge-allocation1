@@ -9,6 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "2.1.1",
+    "@chakra-ui/react": "2.8.2",
+    "@emotion/react": "11",
+    "@emotion/styled": "11",
+    "framer-motion": "^7.5.3",
+    "@tanstack/react-query": "^5.102.8",
+    "axios": "^1.19.0",
+    "cookies-next": "^6.1.1",
+    "jose": "^6.2.10",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "lucide-react": "latest",

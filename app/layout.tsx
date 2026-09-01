@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/components/UnitDetails/reservation.css";
+
+import { getEsubDetails } from "@/lib/units";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Myxellia Allocation",
@@ -10,12 +14,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const esubDetails = await getEsubDetails();
+
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers esubDetails={esubDetails}>{children}</Providers>
+      </body>
     </html>
   );
 }

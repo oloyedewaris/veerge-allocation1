@@ -14,14 +14,16 @@ import {
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
+import { useEsubDetails } from "@/app/providers";
+import { fetchMergedUnits, type MergedUnit } from "@/lib/units";
 import UnitDetails from "./UnitDetails";
 
 const ASSET_ROOT = "/reference-assets/";
-type UnitRecord = { id: string; model: string; availability: string };
+type UnitRecord = MergedUnit;
 type UnitStatus = "available" | "allocated";
 
-function getUnitStatus(availability: string): UnitStatus {
-  return availability.trim() === "Availabel." ? "available" : "allocated";
+function getUnitStatus(allocated: boolean): UnitStatus {
+  return allocated ? "allocated" : "available";
 }
 
 const siteLayers = [
@@ -630,12 +632,7 @@ function MasterplanApp() {
   const controls = useRef<OrbitControlsImpl>(null);
 
   useEffect(() => {
-    fetch(`${ASSET_ROOT}units.json`)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`Unable to load units (${response.status})`);
-        return response.json() as Promise<UnitRecord[]>;
-      })
+    fetchMergedUnits()
       .then(setUnits)
       .catch((error) => console.error(error))
       .finally(() => setUnitsReady(true));
@@ -653,23 +650,17 @@ function MasterplanApp() {
 
     const frame = requestAnimationFrame(() => setSceneReady(true));
     return () => cancelAnimationFrame(frame);
-  }, [
-    assetsLoading,
-    loadedAssets,
-    sceneReady,
-    totalAssets,
-    unitsReady,
-  ]);
+  }, [assetsLoading, loadedAssets, sceneReady, totalAssets, unitsReady]);
 
   const unitStatuses = useMemo(
     () =>
       Object.fromEntries(
-        units.map((unit) => [unit.id, getUnitStatus(unit.availability)]),
+        units.map((unit) => [unit.id, getUnitStatus(unit.allocated)]),
       ) as Record<string, UnitStatus>,
     [units],
   );
   const availableCount = units.filter(
-    (unit) => getUnitStatus(unit.availability) === "available",
+    (unit) => getUnitStatus(unit.allocated) === "available",
   ).length;
   const allocatedCount = units.length - availableCount;
   const typeCounts = useMemo(
@@ -714,7 +705,6 @@ function MasterplanApp() {
           frameloop="demand"
           dpr={[1, 2]}
           performance={{ min: 0.6 }}
-
           camera={{ fov: 45, near: 1, far: 10000 }}
           gl={{
             // logarithmicDepthBuffer: true,
@@ -967,10 +957,16 @@ function MasterplanApp() {
 }
 
 export default function TourApp() {
+  const esubDetails = useEsubDetails();
+
   const [villaId] = useState(() =>
     typeof window === "undefined"
       ? null
       : new URLSearchParams(window.location.search).get("villa"),
   );
-  return villaId ? <UnitDetails unitId={villaId} /> : <MasterplanApp />;
+  return villaId ? (
+    <UnitDetails esubDetails={esubDetails} unitId={villaId} />
+  ) : (
+    <MasterplanApp />
+  );
 }
