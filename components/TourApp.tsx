@@ -766,13 +766,16 @@ function MasterplanApp() {
       </section>
       */}
 
+      {/* Temporarily hidden: homepage logo.
       <img
         className="map-logo homepage-logo"
         src="/assets/logo.svg"
         alt="Marasi"
       />
+      */}
 
       <div className="allocation-ui" aria-label="Allocation controls">
+        {/* Temporarily hidden: left-side homepage filters.
         <aside className="allocation-left">
           <section className="allocation-card allocation-filter-card">
             <header>
@@ -821,6 +824,7 @@ function MasterplanApp() {
             </div>
           </section>
         </aside>
+        */}
 
         <aside className="allocation-right">
           <div className="allocation-menu-wrap">
