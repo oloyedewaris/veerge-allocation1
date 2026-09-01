@@ -1,7 +1,13 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-const source = new URL("../public/reference-assets/xzLocalDoc.csv", import.meta.url);
-const destination = new URL("../public/reference-assets/units.json", import.meta.url);
+const source = new URL(
+  "../public/reference-assets/xzLocalDoc.csv",
+  import.meta.url,
+);
+const destination = new URL(
+  "../public/reference-assets/units.json",
+  import.meta.url,
+);
 const fields = [
   "block",
   "id",
@@ -33,7 +39,9 @@ function allocationNameForIndex(index) {
     offset -= count;
   }
 
-  throw new Error(`No backend allocation name configured for unit index ${index}`);
+  throw new Error(
+    `No backend allocation name configured for unit index ${index}`,
+  );
 }
 
 const csv = await readFile(source, "utf8");
@@ -53,9 +61,14 @@ const units = csv
     };
   });
 
-const expectedCount = allocationNameRanges.reduce((total, [, count]) => total + count, 0);
+const expectedCount = allocationNameRanges.reduce(
+  (total, [, count]) => total + count,
+  0,
+);
 if (units.length !== expectedCount) {
-  throw new Error(`Expected ${expectedCount} local units, received ${units.length}`);
+  throw new Error(
+    `Expected ${expectedCount} local units, received ${units.length}`,
+  );
 }
 
 await writeFile(destination, `${JSON.stringify(units, null, 2)}\n`, "utf8");

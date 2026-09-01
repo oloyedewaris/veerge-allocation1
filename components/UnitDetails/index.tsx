@@ -298,8 +298,11 @@ export default function UnitDetails({
     queryFn: () => fetchProjectBundles(project?.id),
     enabled: !!project?.id,
   });
+
   const allUnits = bundleQuery?.data?.data?.results;
-  const fetchedUnit = allUnits?.find((unit: any) => unit.id === unitId);
+  const fetchedUnit = allUnits?.find(
+    (localUnit: any) => localUnit.id === unit?.unit,
+  );
 
   const paymentPlansQuery = useQuery({
     queryKey: ["fetchBundlePaymentPlans"],
@@ -578,7 +581,6 @@ export default function UnitDetails({
   const verifyCodeMutation = useMutation({
     mutationFn: () => loginWithOTP({ email, code: verificationCode }),
     onSuccess: (res) => {
-      console.log("res?.data", res?.data);
       const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
       if (res?.data?.token) sessionStorage.setItem("token", res?.data?.token);
 
@@ -602,9 +604,9 @@ export default function UnitDetails({
     },
   });
 
-  if (step === "payment-plan") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+  const reservationContent = (() => {
+    if (step === "payment-plan") {
+      return (
         <PaymentPlanStep
           fetchedUnit={fetchedUnit}
           paymentPlans={paymentPlans}
@@ -616,12 +618,10 @@ export default function UnitDetails({
             if (selectedPlanId) setStep("payment-summary");
           }}
         />
-      </aside>
-    );
-  }
-  if (step === "payment-summary" && selectedPlan) {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "payment-summary" && selectedPlan) {
+      return (
         <PaymentSummaryStep
           fetchedUnit={fetchedUnit}
           plan={selectedPlan}
@@ -637,14 +637,12 @@ export default function UnitDetails({
             }
           }}
         />
-      </aside>
-    );
-  }
-  if (step === "contact") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "contact") {
+      return (
         <ContactStep
-          // unitNumber={unitNumber}
+          unitNumber={unit?.name ?? unitId}
           email={email}
           onEmailChange={(nextEmail) => {
             if (nextEmail !== email) setVerificationCode("");
@@ -654,12 +652,10 @@ export default function UnitDetails({
           onBack={() => setStep("payment-summary")}
           onSendCode={() => sendCodeMutation.mutate()}
         />
-      </aside>
-    );
-  }
-  if (step === "verification") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "verification") {
+      return (
         <VerificationStep
           email={email}
           code={verificationCode}
@@ -677,12 +673,10 @@ export default function UnitDetails({
             if (/^\d{6}$/.test(verificationCode)) verifyCodeMutation.mutate();
           }}
         />
-      </aside>
-    );
-  }
-  if (step === "about-you") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "about-you") {
+      return (
         <AboutYouStep
           values={aboutYou}
           onChange={setAboutYou}
@@ -690,12 +684,10 @@ export default function UnitDetails({
           loading={updateProfileMutation.isPending}
           onContinue={() => updateProfileMutation.mutate("next-of-kin")}
         />
-      </aside>
-    );
-  }
-  if (step === "next-of-kin") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "next-of-kin") {
+      return (
         <NextOfKinStep
           values={nextOfKin}
           onChange={setNextOfKin}
@@ -703,12 +695,10 @@ export default function UnitDetails({
           loading={updateProfileMutation.isPending}
           onContinue={() => updateProfileMutation.mutate("documents")}
         />
-      </aside>
-    );
-  }
-  if (step === "documents") {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "documents") {
+      return (
         <DocumentsStep
           files={documents}
           onChange={setDocuments}
@@ -716,25 +706,25 @@ export default function UnitDetails({
           loading={updateProfileMutation.isPending}
           onProceed={() => updateProfileMutation.mutate("success")}
         />
-      </aside>
-    );
-  }
-  if (step === "success" && selectedPlan) {
-    return (
-      <aside className="sales-panel reservation-flow-panel">
+      );
+    }
+    if (step === "success" && selectedPlan) {
+      return (
         <ReservationSuccess
           loading={paymentMutation.isPending}
-          // propertyName={propertyName}
-          // unitNumber={unitNumber}
+          propertyName={project?.name ?? "Tilal Al Ghaf · Narjis"}
+          unitNumber={unit?.name ?? unitId}
           email={email}
           reservedBy={`${aboutYou.firstName} ${aboutYou.lastName}`.trim()}
           plan={selectedPlan}
           onBackToUnit={returnToUnit}
           success={success}
         />
-      </aside>
-    );
-  }
+      );
+    }
+
+    return null;
+  })();
 
   return (
     <main className="unit-detail-page">
@@ -880,88 +870,98 @@ export default function UnitDetails({
         )}
       </section>
 
-      <aside className="unit-sales-panel">
-        <section className="unit-reservation-block">
-          <small>Your new home</small>
-          <h2>
-            Reserve villa {unitId}
-            <br />
-            in your name
-          </h2>
-          <p>
-            Tell us a few things about yourself, review the unit details and
-            payment options, and decide from there.
-          </p>
-          <a
-            className="unit-primary-button"
-            onClick={() => setStep("payment-plan")}
-          >
-            Reserve this unit <span aria-hidden="true">→</span>
-          </a>
-        </section>
+      <aside
+        className={`unit-sales-panel${step !== "overview" ? " reservation-flow-panel" : ""}`}
+      >
+        {reservationContent ?? (
+          <>
+            <section className="unit-reservation-block">
+              <small>Your new home</small>
+              <h2>
+                Reserve villa {unitId}
+                <br />
+                in your name
+              </h2>
+              <p>
+                Tell us a few things about yourself, review the unit details and
+                payment options, and decide from there.
+              </p>
+              <a
+                className="unit-primary-button"
+                onClick={() => setStep("payment-plan")}
+              >
+                Reserve this unit <span aria-hidden="true">→</span>
+              </a>
+            </section>
 
-        <section className="unit-sales-contact">
-          <small>Your sales contact</small>
-          {[
-            {
-              name: "Ahmed Ibraheem",
-              role: "Customer Relations Manager",
-              email: "ahmed@myxellia.io",
-              phone: "2348020001188",
-              image: "/assets/ahmed.jpg",
-            },
-            {
-              name: "David Peter",
-              role: "Sales Manager",
-              email: "david@myxellia.io",
-              phone: "2348094420071",
-              image: "/assets/peter.png",
-            },
-          ].map((contact) => (
-            <article className="unit-contact-card" key={contact.name}>
-              <img src={contact.image} alt="" />
-              <div>
-                <h3>{contact.name}</h3>
-                <p>{contact.role}</p>
-                <a
-                  href={"mailto:" + contact.email + "?subject=" + salesSubject}
-                >
-                  {contact.email}
-                </a>
-              </div>
-              <nav>
-                <a
-                  href={
-                    "https://wa.me/" +
-                    contact.phone +
-                    "?text=I%20am%20interested%20in%20villa%20" +
-                    unitId
-                  }
-                  aria-label={"Message " + contact.name}
-                >
-                  <MessageCircle />
-                </a>
-                <a
-                  href={"mailto:" + contact.email + "?subject=" + salesSubject}
-                  aria-label={"Email " + contact.name}
-                >
-                  <Mail />
-                </a>
-              </nav>
-            </article>
-          ))}
-          <a
-            className="unit-share-link"
-            href={
-              "mailto:?subject=" +
-              salesSubject +
-              "&body=Take%20a%20look%20at%20villa%20" +
-              unitId
-            }
-          >
-            Send to a friend
-          </a>
-        </section>
+            <section className="unit-sales-contact">
+              <small>Your sales contact</small>
+              {[
+                {
+                  name: "Ahmed Ibraheem",
+                  role: "Customer Relations Manager",
+                  email: "ahmed@myxellia.io",
+                  phone: "2348020001188",
+                  image: "/assets/ahmed.jpg",
+                },
+                {
+                  name: "David Peter",
+                  role: "Sales Manager",
+                  email: "david@myxellia.io",
+                  phone: "2348094420071",
+                  image: "/assets/peter.png",
+                },
+              ].map((contact) => (
+                <article className="unit-contact-card" key={contact.name}>
+                  <img src={contact.image} alt="" />
+                  <div>
+                    <h3>{contact.name}</h3>
+                    <p>{contact.role}</p>
+                    <a
+                      href={
+                        "mailto:" + contact.email + "?subject=" + salesSubject
+                      }
+                    >
+                      {contact.email}
+                    </a>
+                  </div>
+                  <nav>
+                    <a
+                      href={
+                        "https://wa.me/" +
+                        contact.phone +
+                        "?text=I%20am%20interested%20in%20villa%20" +
+                        unitId
+                      }
+                      aria-label={"Message " + contact.name}
+                    >
+                      <MessageCircle />
+                    </a>
+                    <a
+                      href={
+                        "mailto:" + contact.email + "?subject=" + salesSubject
+                      }
+                      aria-label={"Email " + contact.name}
+                    >
+                      <Mail />
+                    </a>
+                  </nav>
+                </article>
+              ))}
+              <a
+                className="unit-share-link"
+                href={
+                  "mailto:?subject=" +
+                  salesSubject +
+                  "&body=Take%20a%20look%20at%20villa%20" +
+                  unitId
+                }
+              >
+                Send to a friend
+              </a>
+            </section>
+          </>
+        )}
       </aside>
     </main>
   );

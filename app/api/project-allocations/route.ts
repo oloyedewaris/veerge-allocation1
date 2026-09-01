@@ -1,9 +1,12 @@
-const PROJECT_ALLOCATIONS_URL =
-  "https://dev.matadortrust.com/v2/developers/project-allocations-with-owner/3230/";
+import { BaseURL } from "@/lib/constants/auth-keys";
+
+const PROJECT_ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3230/`;
 
 export async function GET() {
   try {
-    const response = await fetch(PROJECT_ALLOCATIONS_URL, { cache: "no-store" });
+    const response = await fetch(PROJECT_ALLOCATIONS_URL, {
+      cache: "no-store",
+    });
     if (!response.ok) {
       return Response.json(
         { error: "Unable to load project allocations" },

@@ -140,9 +140,16 @@
   color: #14161a;
 }
 
-.sales-panel.reservation-flow-panel {
+.unit-sales-panel.reservation-flow-panel {
   height: 100vh;
   overflow: hidden;
+}
+
+.unit-sales-panel.reservation-flow-panel > .reservation-step,
+.unit-sales-panel.reservation-flow-panel > .reservation-success {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .reservation-step {
@@ -1072,7 +1079,7 @@
     border-bottom: 1px solid #e6e5e2;
   }
 
-  .sales-panel.reservation-flow-panel {
+  .unit-sales-panel.reservation-flow-panel {
     height: min(820px, 90vh);
     display: block;
   }
