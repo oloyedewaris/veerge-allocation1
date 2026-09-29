@@ -825,12 +825,12 @@ export default function UnitDetails({
           >
             3D Exterior
           </button>
-          <button
+          {/* <button
             className={view === "tour" ? "selected" : ""}
             onClick={() => setViewMode("tour")}
           >
             Virtual Tour
-          </button>
+          </button> */}
         </nav>
 
         {view === "exterior" ? (
