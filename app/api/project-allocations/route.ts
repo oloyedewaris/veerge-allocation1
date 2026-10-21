@@ -1,6 +1,6 @@
 import { BaseURL } from "@/lib/constants/auth-keys";
 
-const PROJECT_ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3230/`;
+const PROJECT_ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3432/`;
 
 export async function GET() {
   try {
