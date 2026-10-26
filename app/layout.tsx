@@ -18,7 +18,6 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const esubDetails = await getEsubDetails();
-  console.log("esubDetails", esubDetails);
 
   return (
     <html lang="en">

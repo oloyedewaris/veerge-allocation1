@@ -7,7 +7,7 @@ const ENV_PREFIX =
         ? "api"
         : "dev";
 
-export const LOCAL_ESUB_DOMAIN = "east-of-eden-3432-dev.6787878.com";
+export const LOCAL_ESUB_DOMAIN = "eko-paragon-3489-dev.6787878.com";
 
 export const BaseURL = `https://${ENV_PREFIX}.matadortrust.com/v2`;
 /** v1 API base (investment project, upload, etc.) */

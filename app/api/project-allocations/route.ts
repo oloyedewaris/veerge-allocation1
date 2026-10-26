@@ -1,6 +1,6 @@
 import { BaseURL } from "@/lib/constants/auth-keys";
 
-const PROJECT_ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3432/`;
+const PROJECT_ALLOCATIONS_URL = `${BaseURL}/developers/project-allocations-with-owner/3489/`;
 
 export async function GET() {
   try {
@@ -13,6 +13,7 @@ export async function GET() {
         { status: response.status },
       );
     }
+    console.log("response", response);
 
     return Response.json(await response.json());
   } catch (error) {
